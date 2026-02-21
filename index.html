@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ViralScope - Top Shorts Now</title>
+    <title>ViralScope - Viral Now</title>
     <style>
         :root {
             --bg: #0f0f0f; --card-bg: #1e1e1e; --text: #ffffff; --text-sec: #aaaaaa;
@@ -125,7 +125,7 @@
             <button class="icon-btn" onclick="showFavorites()" title="My Favorites">❤️</button>
             <select id="languageSelector" class="lang-select" onchange="changeLanguage()">
                 <option value="en">🇺🇸 EN</option>
-                <option value="id">🇮🇩 ID</option>
+                <option value="id">🇮 ID</option>
                 <option value="es">🇪🇸 ES</option>
                 <option value="jp">🇯🇵 JP</option>
             </select>
@@ -134,7 +134,7 @@
 
     <div id="homeView">
         <header>
-            <h1 id="txt-title">Viral Shorts Now</h1>
+            <h1 id="txt-title">Viral Now</h1>
             <p class="subtitle" id="txt-subtitle">Most viewed shorts in your region today.</p>
             
             <div class="search-box">
@@ -144,16 +144,16 @@
 
             <div class="filters">
                 <div class="chip shorts active" onclick="loadTrendingShorts()" id="chip-shorts">🔥 Viral Now</div>
-                <div class="chip" onclick="performSearch('AI Technology')" id="chip-ai">🤖 AI</div>
                 <div class="chip" onclick="performSearch('Funny Cats')" id="chip-funny">🐱 Funny</div>
-                <div class="chip" onclick="performSearch('Gaming')" id="chip-gaming">🎮 Gaming</div>
-                <div class="chip" onclick="performSearch('Music')" id="chip-music">🎵 Music</div>
+                <div class="chip" onclick="performSearch('AI Technology')" id="chip-ai">🤖 AI</div>
+                <div class="chip" onclick="performSearch('Gaming Highlights')" id="chip-gaming">🎮 Gaming</div>
+                <div class="chip" onclick="performSearch('Music Hits')" id="chip-music">🎵 Music</div>
             </div>
         </header>
 
         <div class="container">
             <div class="section-header">
-                <div id="sectionHeader" class="section-title">Loading Local Trends...</div>
+                <div id="sectionHeader" class="section-title">Viral Now</div>
             </div>
             <div id="errorMsg" class="error-msg"></div>
             <div class="video-grid" id="videoGrid"></div>
@@ -194,13 +194,13 @@
         let hasMoreData = true;
         let favorites = JSON.parse(localStorage.getItem('viralScopeFavorites')) || [];
         let pageTokens = {}; 
-        let userRegion = 'ID'; // Default ke Indonesia biar aman dulu
+        let userRegion = 'ID'; // Default Indonesia
 
         const translations = {
-            en: { title: "Viral Shorts Now", subtitle: "Most viewed shorts in your region today.", searchPlaceholder: "Search topics...", btnSearch: "Search", chipShorts: "🔥 Viral Now", chipAi: "🤖 AI", chipFunny: "🐱 Funny", chipGaming: "🎮 Gaming", chipMusic: "🎵 Music", sectionTrending: "Viral Now", sectionSearch: "Search Results", btnClose: "Close", favTitle: "My Saved Videos ❤️", emptyFav: "No saved videos yet.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Loading more..." },
-            id: { title: "Shorts Viral Sekarang", subtitle: "Shorts paling banyak ditonton di negaramu hari ini.", searchPlaceholder: "Cari topik...", btnSearch: "Cari", chipShorts: "🔥 Viral Sekarang", chipAi: "🤖 AI", chipFunny: "🐱 Lucu", chipGaming: "🎮 Gaming", chipMusic: "🎵 Musik", sectionTrending: "Viral Sekarang", sectionSearch: "Hasil Pencarian", btnClose: "Tutup", favTitle: "Video Tersimpan ❤️", emptyFav: "Belum ada video tersimpan.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Memuat lagi..." },
-            es: { title: "Shorts Virales Ahora", subtitle: "Los más vistos en tu región hoy.", searchPlaceholder: "Buscar...", btnSearch: "Buscar", chipShorts: "🔥 Viral Ahora", chipAi: "🤖 IA", chipFunny: "🐱 Gracioso", chipGaming: "🎮 Juegos", chipMusic: "🎵 Música", sectionTrending: "Viral Ahora", sectionSearch: "Resultados", btnClose: "Cerrar", favTitle: "Mis Guardados ❤️", emptyFav: "Sin videos guardados.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Cargando más..." },
-            jp: { title: "バイラルショート", subtitle: "あなたの地域で最も視聴されたショート。", searchPlaceholder: "検索...", btnSearch: "検索", chipShorts: "🔥 今バイラル", chipAi: "🤖 AI", chipFunny: "🐱 面白い", chipGaming: "🎮 ゲーム", chipMusic: "🎵 音楽", sectionTrending: "今バイラル", sectionSearch: "検索結果", btnClose: "閉じる", favTitle: "保存した動画 ❤️", emptyFav: "保存された動画はありません。", themeLight: "☀️", themeDark: "🌙", loadingMore: "読み込み中..." }
+            en: { title: "Viral Now", subtitle: "Most viewed shorts in your region today.", searchPlaceholder: "Search topics...", btnSearch: "Search", chipShorts: "🔥 Viral Now", chipFunny: "🐱 Funny", chipAi: "🤖 AI", chipGaming: "🎮 Gaming", chipMusic: "🎵 Music", sectionTrending: "Viral Now", sectionSearch: "Search Results", btnClose: "Close", favTitle: "My Saved Videos ❤️", emptyFav: "No saved videos yet.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Loading more..." },
+            id: { title: "Viral Sekarang", subtitle: "Shorts paling banyak ditonton hari ini.", searchPlaceholder: "Cari topik...", btnSearch: "Cari", chipShorts: "🔥 Viral Sekarang", chipFunny: "🐱 Lucu", chipAi: "🤖 AI", chipGaming: "🎮 Gaming", chipMusic: "🎵 Musik", sectionTrending: "Viral Sekarang", sectionSearch: "Hasil Pencarian", btnClose: "Tutup", favTitle: "Video Tersimpan ❤️", emptyFav: "Belum ada video tersimpan.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Memuat lagi..." },
+            es: { title: "Viral Ahora", subtitle: "Los más vistos en tu región hoy.", searchPlaceholder: "Buscar...", btnSearch: "Buscar", chipShorts: "🔥 Viral Ahora", chipFunny: "🐱 Gracioso", chipAi: "🤖 IA", chipGaming: "🎮 Juegos", chipMusic: "🎵 Música", sectionTrending: "Viral Ahora", sectionSearch: "Resultados", btnClose: "Cerrar", favTitle: "Mis Guardados ❤️", emptyFav: "Sin videos guardados.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Cargando más..." },
+            jp: { title: "今バイラル", subtitle: "あなたの地域で最も視聴されたショート。", searchPlaceholder: "検索...", btnSearch: "検索", chipShorts: "🔥 今バイラル", chipFunny: "🐱 面白い", chipAi: "🤖 AI", chipGaming: "🎮 ゲーム", chipMusic: "🎵 音楽", sectionTrending: "今バイラル", sectionSearch: "検索結果", btnClose: "閉じる", favTitle: "保存した動画 ❤️", emptyFav: "保存された動画はありません。", themeLight: "☀️", themeDark: "🌙", loadingMore: "読み込み中..." }
         };
 
         let currentLang = 'en';
@@ -217,14 +217,7 @@
             else if (lang.includes('ko')) userRegion = 'KR';
             else userRegion = 'US';
             console.log("Region Set to:", userRegion);
-            updateHeaderText();
-        }
-
-        function updateHeaderText() {
-            const t = translations[currentLang];
-            const regionName = userRegion === 'ID' ? 'Indonesia' : userRegion === 'US' ? 'Global' : userRegion;
-            document.getElementById('sectionHeader').innerText = isTrendingMode ? 
-                `${t.sectionTrending} (${regionName})` : t.sectionSearch;
+            // Tidak perlu update header text region, cukup "Viral Now" saja sesuai request
         }
 
         function toggleTheme() {
@@ -275,12 +268,19 @@
             document.getElementById('txt-loading-more').innerText = t.loadingMore;
             
             document.getElementById('chip-shorts').innerText = t.chipShorts;
-            document.getElementById('chip-ai').innerText = t.chipAi;
             document.getElementById('chip-funny').innerText = t.chipFunny;
+            document.getElementById('chip-ai').innerText = t.chipAi;
             document.getElementById('chip-gaming').innerText = t.chipGaming;
             document.getElementById('chip-music').innerText = t.chipMusic;
 
-            updateHeaderText();
+            // Header tetap statis "Viral Now" atau "Search Results"
+            const sectionHeader = document.getElementById('sectionHeader');
+            if (!sectionHeader.classList.contains('search-mode')) {
+                sectionHeader.innerText = t.sectionTrending;
+            } else {
+                sectionHeader.innerText = t.sectionSearch;
+            }
+
             if(document.getElementById('favoritesView').style.display === 'block') showFavorites();
         }
 
@@ -305,15 +305,17 @@
                 document.getElementById('videoGrid').innerHTML = '';
                 document.getElementById('errorMsg').style.display = 'none';
                 document.getElementById('sectionHeader').classList.remove('search-mode');
+                document.getElementById('sectionHeader').innerText = translations[currentLang].sectionTrending;
                 setActiveChip('chip-shorts');
+                
+                // RESET STATE TOTAL
                 currentPage = 1;
-                currentQuery = '';
+                currentQuery = 'trending shorts'; // Ganti query kosong ke kata kunci aman
                 isTrendingMode = true;
                 hasMoreData = true;
-                pageTokens['trending'] = ''; 
+                pageTokens = {}; // Reset semua token
             }
             
-            updateHeaderText();
             await fetchVideos(true);
         }
 
@@ -328,11 +330,13 @@
                 document.getElementById('sectionHeader').innerText = translations[currentLang].sectionSearch;
                 document.getElementById('sectionHeader').classList.add('search-mode');
                 document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                
+                // RESET STATE TOTAL
                 currentPage = 1;
                 currentQuery = query;
                 isTrendingMode = false;
                 hasMoreData = true;
-                pageTokens[query] = ''; 
+                pageTokens = {}; // Reset semua token agar infinite scroll jalan dari awal
             }
             await fetchVideos(false);
         }
@@ -350,12 +354,12 @@
             try {
                 const maxResults = (currentPage === 1) ? 25 : 15;
                 let url = '';
-                let tokenKey = isTrending ? 'trending' : currentQuery;
+                // Gunakan key 'default' untuk trending, dan query asli untuk search
+                let tokenKey = isTrending ? 'default' : currentQuery;
 
                 if (isTrending) {
-                    // FIX: Gunakan SEARCH endpoint dengan query kosong, order by viewCount, duration short, dan regionCode
-                    // Ini adalah cara terbaik mendapatkan "Top Shorts" yang mirip trending
-                    url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=&type=video&videoDuration=short&order=viewCount&regionCode=${userRegion}&key=${API_KEY}`;
+                    // FIX: Gunakan kata kunci "trending shorts" agar pasti dapat hasil
+                    url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=${encodeURIComponent(currentQuery)}&type=video&videoDuration=short&order=viewCount&regionCode=${userRegion}&key=${API_KEY}`;
                 } else {
                     url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=${encodeURIComponent(currentQuery)}&type=video&videoDuration=short&order=relevance&key=${API_KEY}`;
                 }
@@ -377,14 +381,14 @@
                 
                 if (!data.items || data.items.length === 0) {
                     hasMoreData = false;
-                    if (currentPage === 1) showError("No results found. Try another region or topic.");
+                    if (currentPage === 1) showError("No results found. Try another topic.");
                     return;
                 }
 
                 pageTokens[tokenKey] = data.nextPageToken || null;
                 if (!data.nextPageToken) hasMoreData = false;
 
-                displayVideos(data.items, isTrending);
+                displayVideos(data.items);
                 currentPage++;
 
             } catch (err) {
@@ -405,7 +409,7 @@
             if(id) document.getElementById(id).classList.add('active');
         }
 
-        function displayVideos(items, isTrending) {
+        function displayVideos(items) {
             const grid = document.getElementById('videoGrid');
             items.forEach(item => {
                 const videoId = item.id.videoId;
