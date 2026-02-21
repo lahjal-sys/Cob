@@ -3,61 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ViralScope - Viral Now</title>
+    <title>ViralScope</title>
     <style>
         :root {
             --bg: #0f0f0f; --card-bg: #1e1e1e; --text: #ffffff; --text-sec: #aaaaaa;
-            --nav-bg: rgba(15, 15, 15, 0.85); --input-bg: #2a2a2a; --border: #333;
+            --nav-bg: rgba(15, 15, 15, 0.95); --input-bg: #2a2a2a; --border: #333;
             --primary: #ff0050; --secondary: #00f2ea; --chip-bg: #2a2a2a; --chip-text: #aaa;
-            --modal-bg: rgba(0,0,0,0.95); --nav-height: 70px;
+            --modal-bg: rgba(0,0,0,0.95); --nav-height: 60px;
         }
         [data-theme="light"] {
             --bg: #f5f5f5; --card-bg: #ffffff; --text: #111111; --text-sec: #666666;
-            --nav-bg: rgba(255, 255, 255, 0.85); --input-bg: #e0e0e0; --border: #ddd;
+            --nav-bg: rgba(255, 255, 255, 0.95); --input-bg: #e0e0e0; --border: #ddd;
             --chip-bg: #e0e0e0; --chip-text: #555; --modal-bg: rgba(255,255,255,0.95);
         }
 
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; min-height: 100vh; transition: background 0.3s, color 0.3s; scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; min-height: 100vh; transition: background 0.3s, color 0.3s; }
         
+        /* Navbar */
         nav {
-            width: 100%; padding: 15px 40px; box-sizing: border-box;
-            background: var(--nav-bg); backdrop-filter: blur(12px);
+            width: 100%; padding: 0 20px; box-sizing: border-box;
+            background: var(--nav-bg); backdrop-filter: blur(10px);
             position: sticky; top: 0; z-index: 100;
             border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-            transition: all 0.3s ease;
             height: var(--nav-height);
+            display: flex; align-items: center; justify-content: space-between;
         }
-        nav.scrolled { padding: 8px 40px; height: 60px; background: rgba(15, 15, 15, 0.95); }
-        [data-theme="light"] nav.scrolled { background: rgba(255, 255, 255, 0.95); }
 
-        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: transform 0.3s; }
-        nav.scrolled .logo { font-size: 1.2rem; }
+        .nav-left { display: flex; align-items: center; gap: 20px; }
+        .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer; text-decoration: none; }
         
-        .nav-controls { display: flex; gap: 10px; align-items: center; }
-        .icon-btn { background: var(--chip-bg); border: 1px solid var(--border); color: var(--text); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; transition: 0.2s; }
-        .icon-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.1); }
-        .lang-select { background: var(--chip-bg); color: var(--text); border: 1px solid var(--border); padding: 6px 10px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; outline: none; }
-
-        header { width: 100%; padding: 40px 20px 20px; text-align: center; max-width: 800px; margin: 0 auto; }
-        h1 { font-size: 2.5rem; margin: 0 0 10px 0; letter-spacing: -1px; }
-        p.subtitle { color: var(--text-sec); font-size: 1rem; margin-bottom: 20px; }
+        /* Desktop Menu */
+        .desktop-menu { display: none; gap: 20px; align-items: center; }
+        .menu-link { text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.95rem; transition: 0.2s; cursor: pointer; }
+        .menu-link:hover { color: var(--primary); }
         
-        .search-box { display: flex; max-width: 600px; margin: 0 auto 20px; gap: 10px; }
-        input { flex: 1; padding: 14px 20px; border-radius: 50px; border: 2px solid var(--border); background: var(--input-bg); color: var(--text); font-size: 1rem; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--primary); }
-        button.search-btn { padding: 14px 30px; border-radius: 50px; border: none; background: linear-gradient(45deg, var(--primary), #d60043); color: white; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button.search-btn:hover { transform: scale(1.05); }
+        /* Language Selector (Desktop: Text+Flag, Mobile: Flag Only) */
+        .lang-select { background: var(--chip-bg); color: var(--text); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-size: 0.9rem; cursor: pointer; outline: none; display: flex; align-items: center; gap: 5px; }
+        
+        /* Mobile Hamburger */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; width: 30px; }
+        .bar { width: 100%; height: 3px; background-color: var(--text); border-radius: 2px; transition: 0.3s; }
+        
+        /* Mobile Dropdown Menu */
+        .mobile-dropdown {
+            display: none; position: absolute; top: var(--nav-height); left: 0; width: 100%;
+            background: var(--nav-bg); border-bottom: 1px solid var(--border);
+            flex-direction: column; padding: 20px; gap: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        .mobile-dropdown.active { display: flex; }
+        .mobile-link { text-decoration: none; color: var(--text); font-size: 1.1rem; font-weight: 600; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .mobile-lang-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
 
-        .filters { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-        .chip { background: var(--chip-bg); border: 1px solid var(--border); color: var(--chip-text); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
+        /* Content */
+        .container { width: 90%; max-width: 1200px; margin: 20px auto; padding-bottom: 50px; }
+        
+        /* Filters */
+        .filters { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; }
+        .chip { background: var(--chip-bg); border: 1px solid var(--border); color: var(--chip-text); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; transition: 0.3s; }
         .chip:hover { background: var(--border); color: var(--text); }
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
 
-        .container { width: 90%; max-width: 1200px; padding: 20px; margin: 0 auto 50px; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .section-title { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-        
+        /* Grid */
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
         .video-card { background: var(--card-bg); border-radius: 16px; overflow: hidden; transition: 0.3s; cursor: pointer; border: 1px solid var(--border); position: relative; }
         .video-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -68,7 +75,7 @@
         .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2.5rem; opacity: 0.8; text-shadow: 0 2px 10px rgba(0,0,0,0.8); pointer-events: none; }
         .shorts-badge { position: absolute; top: 10px; right: 10px; background: rgba(255, 0, 80, 0.9); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
 
-        .info { padding: 12px; position: relative; }
+        .info { padding: 12px; }
         .title { font-size: 0.95rem; font-weight: 600; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; color: var(--text); }
         .stats { font-size: 0.75rem; color: var(--text-sec); }
 
@@ -80,23 +87,13 @@
         .action-btn:hover { background: var(--primary); transform: scale(1.1); }
         .action-btn.favorited { background: var(--primary); }
 
-        .loading-more { text-align: center; padding: 20px; color: var(--text-sec); font-size: 0.9rem; display: none; }
-        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid var(--chip-bg); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; vertical-align: middle; margin-right: 10px; }
+        /* Loading & Error */
+        .loading-state { text-align: center; padding: 40px; color: var(--text-sec); font-size: 1.1rem; }
+        .spinner { display: inline-block; width: 30px; height: 30px; border: 4px solid var(--chip-bg); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; vertical-align: middle; margin-right: 10px; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        .error-msg { color: #ff4444; text-align: center; margin: 20px; padding: 15px; background: rgba(255, 68, 68, 0.1); border-radius: 10px; display: none; border: 1px solid #ff4444; }
 
-        #backToTop {
-            position: fixed; bottom: 30px; right: 30px;
-            background: var(--primary); color: white;
-            width: 50px; height: 50px; border-radius: 50%;
-            border: none; font-size: 1.5rem; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 0, 80, 0.4);
-            opacity: 0; pointer-events: none; transform: translateY(20px);
-            transition: all 0.3s ease; z-index: 90;
-            display: flex; align-items: center; justify-content: center;
-        }
-        #backToTop.visible { opacity: 1; pointer-events: all; transform: translateY(0); }
-        #backToTop:hover { transform: translateY(-5px); background: #d60043; }
-
+        /* Modal & Favorites */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 1000; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(5px); }
         .modal-content { width: 90%; max-width: 500px; aspect-ratio: 9/16; background: black; border-radius: 12px; overflow: hidden; max-height: 80vh; }
         iframe { width: 100%; height: 100%; border: none; }
@@ -105,76 +102,104 @@
         #favoritesView { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 200; overflow-y: auto; padding: 80px 20px 20px; box-sizing: border-box; }
         .fav-header { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto 20px; }
         .close-fav { background: var(--chip-bg); border: 1px solid var(--border); color: var(--text); padding: 8px 20px; border-radius: 20px; cursor: pointer; }
-        .error-msg { color: #ff4444; text-align: center; margin: 20px; padding: 15px; background: rgba(255, 68, 68, 0.1); border-radius: 10px; display: none; border: 1px solid #ff4444; }
 
-        @media (max-width: 600px) { 
-            h1 { font-size: 1.8rem; } 
-            .search-box { flex-direction: column; } 
-            button.search-btn { width: 100%; } 
-            nav { padding: 10px 20px; }
-            nav.scrolled { padding: 5px 20px; }
+        /* Responsive */
+        @media (min-width: 769px) {
+            .hamburger { display: none; }
+            .desktop-menu { display: flex; }
+            .mobile-dropdown { display: none !important; }
+        }
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .desktop-menu { display: none; }
+            .lang-select span { display: none; } /* Hide text, show flag only on mobile */
+            .lang-select { padding: 6px 10px; }
         }
     </style>
 </head>
 <body>
 
-    <nav id="navbar">
-        <div class="logo" onclick="showHome()">⚡ ViralScope</div>
-        <div class="nav-controls">
-            <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle Theme">🌙</button>
-            <button class="icon-btn" onclick="showFavorites()" title="My Favorites">❤️</button>
-            <select id="languageSelector" class="lang-select" onchange="changeLanguage()">
-                <option value="en">🇺🇸 EN</option>
-                <option value="id">🇮 ID</option>
-                <option value="es">🇪🇸 ES</option>
-                <option value="jp">🇯🇵 JP</option>
-            </select>
+    <nav>
+        <div class="nav-left">
+            <!-- Hamburger -->
+            <div class="hamburger" onclick="toggleMobileMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <!-- Logo -->
+            <a href="#" class="logo" onclick="loadCategory('trending')">⚡ ViralScope</a>
+            
+            <!-- Desktop Menu -->
+            <div class="desktop-menu">
+                <a class="menu-link" onclick="loadCategory('trending')">Home</a>
+                <a class="menu-link" onclick="alert('AI Generator coming soon!')">AI Generator</a>
+                <a class="menu-link" href="https://google.com" target="_blank">Links</a>
+                
+                <!-- Lang Desktop -->
+                <select id="langDesktop" class="lang-select" onchange="changeLanguage()">
+                    <option value="en">🇺🇸 English</option>
+                    <option value="id">🇮🇩 Indonesia</option>
+                    <option value="es">🇪🇸 Español</option>
+                    <option value="jp">🇯🇵 日本語</option>
+                </select>
+            </div>
         </div>
+
+        <!-- Mobile Lang (Only Flag) -->
+        <select id="langMobile" class="lang-select" style="display:none;" onchange="changeLanguage()">
+            <option value="en">🇺🇸</option>
+            <option value="id">🇮🇩</option>
+            <option value="es">🇪🇸</option>
+            <option value="jp">🇯🇵</option>
+        </select>
     </nav>
 
-    <div id="homeView">
-        <header>
-            <h1 id="txt-title">Viral Now</h1>
-            <p class="subtitle" id="txt-subtitle">Most viewed shorts in your region today.</p>
-            
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search topics...">
-                <button class="search-btn" onclick="performSearch()" id="txt-btn-search">Search</button>
-            </div>
-
-            <div class="filters">
-                <div class="chip shorts active" onclick="loadTrendingShorts()" id="chip-shorts">🔥 Viral Now</div>
-                <div class="chip" onclick="performSearch('Funny Cats')" id="chip-funny">🐱 Funny</div>
-                <div class="chip" onclick="performSearch('AI Technology')" id="chip-ai">🤖 AI</div>
-                <div class="chip" onclick="performSearch('Gaming Highlights')" id="chip-gaming">🎮 Gaming</div>
-                <div class="chip" onclick="performSearch('Music Hits')" id="chip-music">🎵 Music</div>
-            </div>
-        </header>
-
-        <div class="container">
-            <div class="section-header">
-                <div id="sectionHeader" class="section-title">Viral Now</div>
-            </div>
-            <div id="errorMsg" class="error-msg"></div>
-            <div class="video-grid" id="videoGrid"></div>
-            
-            <div id="loadingMore" class="loading-more">
-                <span class="spinner"></span> <span id="txt-loading-more">Loading more...</span>
-            </div>
+    <!-- Mobile Dropdown -->
+    <div class="mobile-dropdown" id="mobileDropdown">
+        <a class="mobile-link" onclick="loadCategory('trending'); toggleMobileMenu()">Home</a>
+        <a class="mobile-link" onclick="alert('AI Generator coming soon!'); toggleMobileMenu()">AI Generator</a>
+        <a class="mobile-link" href="https://google.com" target="_blank" onclick="toggleMobileMenu()">External Links</a>
+        
+        <div class="mobile-lang-row">
+            <span style="color:var(--text-sec); font-size:0.9rem;">Language</span>
+            <select id="langDropdown" class="lang-select" onchange="changeLanguage(); toggleMobileMenu()">
+                <option value="en">🇺🇸 English</option>
+                <option value="id">🇮🇩 Indonesia</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="jp">🇯🇵 日本語</option>
+            </select>
         </div>
     </div>
 
+    <!-- Main Content -->
+    <div id="homeView" class="container">
+        <div class="filters">
+            <div class="chip active" onclick="loadCategory('trending')" id="chip-trending">🔥 Viral Now</div>
+            <div class="chip" onclick="loadCategory('funny')" id="chip-funny">🐱 Funny</div>
+            <div class="chip" onclick="loadCategory('ai')" id="chip-ai">🤖 AI</div>
+            <div class="chip" onclick="loadCategory('gaming')" id="chip-gaming">🎮 Gaming</div>
+            <div class="chip" onclick="loadCategory('music')" id="chip-music">🎵 Music</div>
+        </div>
+
+        <div id="errorMsg" class="error-msg"></div>
+        <div id="loadingState" class="loading-state" style="display:none;">
+            <span class="spinner"></span> <span id="txt-loading">Loading viral videos...</span>
+        </div>
+        <div class="video-grid" id="videoGrid"></div>
+    </div>
+
+    <!-- Favorites View -->
     <div id="favoritesView">
         <div class="fav-header">
             <h2 id="txt-fav-title">My Saved Videos ❤️</h2>
             <button class="close-fav" onclick="showHome()">← Back</button>
         </div>
-        <div class="container">
-            <div id="favGrid" class="video-grid"></div>
-            <div id="emptyFavMsg" style="text-align:center; color:var(--text-sec); margin-top:50px; display:none;">No saved videos yet.</div>
-        </div>
+        <div class="video-grid" id="favGrid"></div>
+        <div id="emptyFavMsg" style="text-align:center; color:var(--text-sec); margin-top:50px; display:none;">No saved videos yet.</div>
     </div>
 
+    <!-- Player Modal -->
     <div class="modal" id="videoModal">
         <div class="modal-content">
             <iframe id="youtubePlayer" src="" allowfullscreen></iframe>
@@ -182,106 +207,84 @@
         <button class="close-btn" onclick="closeModal()" id="txt-btn-close">Close Player</button>
     </div>
 
-    <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
-
     <script>
-        const API_KEY = 'AIzaSyBGH3y7ZJwEtETVd1hQmwzBlZFmsvKBUJE'; 
+        // ⚠️ MASUKKAN 5 API KEY KAMU DI SINI
+        const API_KEYS = [
+            'AIzaSyBGH3y7ZJwEtETVd1hQmwzBlZFmsvKBUJE', 
+            'AIzaSyB8jJo5jvlTFSH2pLWSKlmNTnrGu2xojvg', 
+            'AIzaSyBzH-UD6q3DaIj3Q7usfzRU6di_Pg4qOcY', 
+            'AIzaSyCmZ0LwP3WAiD2Uk_r3G4a067aMMVwsil4', 
+            'AIzaSyD91GscbeZQm0wVVmpSVDuqYb3T_UndK-M'
+        ];
 
-        let currentPage = 1;
-        let currentQuery = '';
-        let isTrendingMode = true;
-        let isLoading = false;
-        let hasMoreData = true;
+        let currentKeyIndex = 0;
         let favorites = JSON.parse(localStorage.getItem('viralScopeFavorites')) || [];
-        let pageTokens = {}; 
-        let userRegion = 'ID'; // Default Indonesia
+        let userRegion = 'ID'; 
+        
+        const queries = {
+            'trending': 'trending shorts',
+            'funny': 'funny cats shorts',
+            'ai': 'AI technology shorts',
+            'gaming': 'gaming highlights shorts',
+            'music': 'music hits shorts'
+        };
 
         const translations = {
-            en: { title: "Viral Now", subtitle: "Most viewed shorts in your region today.", searchPlaceholder: "Search topics...", btnSearch: "Search", chipShorts: "🔥 Viral Now", chipFunny: "🐱 Funny", chipAi: "🤖 AI", chipGaming: "🎮 Gaming", chipMusic: "🎵 Music", sectionTrending: "Viral Now", sectionSearch: "Search Results", btnClose: "Close", favTitle: "My Saved Videos ❤️", emptyFav: "No saved videos yet.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Loading more..." },
-            id: { title: "Viral Sekarang", subtitle: "Shorts paling banyak ditonton hari ini.", searchPlaceholder: "Cari topik...", btnSearch: "Cari", chipShorts: "🔥 Viral Sekarang", chipFunny: "🐱 Lucu", chipAi: "🤖 AI", chipGaming: "🎮 Gaming", chipMusic: "🎵 Musik", sectionTrending: "Viral Sekarang", sectionSearch: "Hasil Pencarian", btnClose: "Tutup", favTitle: "Video Tersimpan ❤️", emptyFav: "Belum ada video tersimpan.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Memuat lagi..." },
-            es: { title: "Viral Ahora", subtitle: "Los más vistos en tu región hoy.", searchPlaceholder: "Buscar...", btnSearch: "Buscar", chipShorts: "🔥 Viral Ahora", chipFunny: "🐱 Gracioso", chipAi: "🤖 IA", chipGaming: "🎮 Juegos", chipMusic: "🎵 Música", sectionTrending: "Viral Ahora", sectionSearch: "Resultados", btnClose: "Cerrar", favTitle: "Mis Guardados ❤️", emptyFav: "Sin videos guardados.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Cargando más..." },
-            jp: { title: "今バイラル", subtitle: "あなたの地域で最も視聴されたショート。", searchPlaceholder: "検索...", btnSearch: "検索", chipShorts: "🔥 今バイラル", chipFunny: "🐱 面白い", chipAi: "🤖 AI", chipGaming: "🎮 ゲーム", chipMusic: "🎵 音楽", sectionTrending: "今バイラル", sectionSearch: "検索結果", btnClose: "閉じる", favTitle: "保存した動画 ❤️", emptyFav: "保存された動画はありません。", themeLight: "☀️", themeDark: "🌙", loadingMore: "読み込み中..." }
+            en: { loading: "Loading viral videos...", btnClose: "Close", favTitle: "My Saved Videos ❤️", emptyFav: "No saved videos yet." },
+            id: { loading: "Memuat video viral...", btnClose: "Tutup", favTitle: "Video Tersimpan ❤️", emptyFav: "Belum ada video tersimpan." },
+            es: { loading: "Cargando videos...", btnClose: "Cerrar", favTitle: "Mis Guardados ❤️", emptyFav: "Sin videos guardados." },
+            jp: { loading: "読み込み中...", btnClose: "閉じる", favTitle: "保存した動画 ❤️", emptyFav: "保存された動画はありません。" }
         };
 
         let currentLang = 'en';
 
+        // Detect Region
         function detectRegion() {
             const lang = navigator.language || navigator.userLanguage; 
             if (lang.includes('id')) userRegion = 'ID';
             else if (lang.includes('es')) userRegion = 'ES';
             else if (lang.includes('ja')) userRegion = 'JP';
-            else if (lang.includes('de')) userRegion = 'DE';
-            else if (lang.includes('fr')) userRegion = 'FR';
-            else if (lang.includes('pt')) userRegion = 'BR';
-            else if (lang.includes('ru')) userRegion = 'RU';
-            else if (lang.includes('ko')) userRegion = 'KR';
             else userRegion = 'US';
-            console.log("Region Set to:", userRegion);
-            // Tidak perlu update header text region, cukup "Viral Now" saja sesuai request
         }
 
-        function toggleTheme() {
-            const body = document.body;
-            const btn = document.getElementById('themeBtn');
-            const isDark = body.getAttribute('data-theme') !== 'light';
-            if (isDark) {
-                body.setAttribute('data-theme', 'light');
-                btn.innerText = translations[currentLang].themeLight;
-                localStorage.setItem('viralScopeTheme', 'light');
-            } else {
-                body.removeAttribute('data-theme');
-                btn.innerText = translations[currentLang].themeDark;
-                localStorage.setItem('viralScopeTheme', 'dark');
-            }
+        // UI Functions
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileDropdown');
+            menu.classList.toggle('active');
+            
+            // Show/Hide Lang Select based on screen
+            const isMobile = window.innerWidth <= 768;
+            document.getElementById('langMobile').style.display = isMobile ? 'flex' : 'none';
         }
 
-        if (localStorage.getItem('viralScopeTheme') === 'light') {
-            document.body.setAttribute('data-theme', 'light');
-            document.getElementById('themeBtn').innerText = '☀️';
-        }
-
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            const backToTop = document.getElementById('backToTop');
-            if (window.scrollY > 300) {
-                nav.classList.add('scrolled');
-                backToTop.classList.add('visible');
-            } else {
-                nav.classList.remove('scrolled');
-                backToTop.classList.remove('visible');
-            }
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800 && !isLoading && hasMoreData) {
-                loadMoreVideos();
-            }
+        // Ensure correct lang display on resize
+        window.addEventListener('resize', () => {
+            const isMobile = window.innerWidth <= 768;
+            document.getElementById('langMobile').style.display = isMobile ? 'flex' : 'none';
+            document.getElementById('langDesktop').style.display = isMobile ? 'none' : 'flex';
+            if(!isMobile) document.getElementById('mobileDropdown').classList.remove('active');
         });
 
         function changeLanguage() {
-            currentLang = document.getElementById('languageSelector').value;
+            // Sync all selects
+            const vals = [document.getElementById('langDesktop'), document.getElementById('langMobile'), document.getElementById('langDropdown')];
+            let selectedVal = 'en';
+            
+            // Find which one changed or default to first
+            for(let el of vals) {
+                if(el && el.value) { selectedVal = el.value; break; }
+            }
+            
+            // Set all to same value
+            vals.forEach(el => { if(el) el.value = selectedVal; });
+            
+            currentLang = selectedVal;
             const t = translations[currentLang];
-            document.getElementById('txt-title').innerText = t.title;
-            document.getElementById('txt-subtitle').innerText = t.subtitle;
-            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
-            document.getElementById('txt-btn-search').innerText = t.btnSearch;
+            
+            document.getElementById('txt-loading').innerText = t.loading;
             document.getElementById('txt-btn-close').innerText = t.btnClose;
             document.getElementById('txt-fav-title').innerText = t.favTitle;
             document.getElementById('emptyFavMsg').innerText = t.emptyFav;
-            document.getElementById('txt-loading-more').innerText = t.loadingMore;
-            
-            document.getElementById('chip-shorts').innerText = t.chipShorts;
-            document.getElementById('chip-funny').innerText = t.chipFunny;
-            document.getElementById('chip-ai').innerText = t.chipAi;
-            document.getElementById('chip-gaming').innerText = t.chipGaming;
-            document.getElementById('chip-music').innerText = t.chipMusic;
-
-            // Header tetap statis "Viral Now" atau "Search Results"
-            const sectionHeader = document.getElementById('sectionHeader');
-            if (!sectionHeader.classList.contains('search-mode')) {
-                sectionHeader.innerText = t.sectionTrending;
-            } else {
-                sectionHeader.innerText = t.sectionSearch;
-            }
-
-            if(document.getElementById('favoritesView').style.display === 'block') showFavorites();
         }
 
         function showHome() {
@@ -297,225 +300,154 @@
             window.scrollTo(0,0);
         }
 
-        // --- CORE LOGIC FIXED ---
-        async function loadTrendingShorts(reset = true) {
-            if (!API_KEY || API_KEY.length < 20) { showError("⚠️ API Key Missing!"); return; }
+        // --- CORE LOGIC: MULTI-KEY & 50 VIDEOS ---
+        async function loadCategory(category) {
+            document.getElementById('videoGrid').innerHTML = '';
+            document.getElementById('errorMsg').style.display = 'none';
+            document.getElementById('loadingState').style.display = 'block';
             
-            if (reset) {
-                document.getElementById('videoGrid').innerHTML = '';
-                document.getElementById('errorMsg').style.display = 'none';
-                document.getElementById('sectionHeader').classList.remove('search-mode');
-                document.getElementById('sectionHeader').innerText = translations[currentLang].sectionTrending;
-                setActiveChip('chip-shorts');
-                
-                // RESET STATE TOTAL
-                currentPage = 1;
-                currentQuery = 'trending shorts'; // Ganti query kosong ke kata kunci aman
-                isTrendingMode = true;
-                hasMoreData = true;
-                pageTokens = {}; // Reset semua token
-            }
-            
-            await fetchVideos(true);
-        }
-
-        async function performSearch(customQuery = null, reset = true) {
-            const query = customQuery || document.getElementById('searchInput').value;
-            if (!query) return;
-            if (!API_KEY || API_KEY.length < 20) { showError("⚠️ API Key Missing!"); return; }
-
-            if (reset) {
-                document.getElementById('videoGrid').innerHTML = '';
-                document.getElementById('errorMsg').style.display = 'none';
-                document.getElementById('sectionHeader').innerText = translations[currentLang].sectionSearch;
-                document.getElementById('sectionHeader').classList.add('search-mode');
-                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-                
-                // RESET STATE TOTAL
-                currentPage = 1;
-                currentQuery = query;
-                isTrendingMode = false;
-                hasMoreData = true;
-                pageTokens = {}; // Reset semua token agar infinite scroll jalan dari awal
-            }
-            await fetchVideos(false);
-        }
-
-        async function fetchVideos(isTrending) {
-            if (isLoading || !hasMoreData) return;
-            isLoading = true;
-            
-            if (currentPage === 1) {
-                document.getElementById('loadingMore').style.display = 'none';
-            } else {
-                document.getElementById('loadingMore').style.display = 'block';
-            }
-
-            try {
-                const maxResults = (currentPage === 1) ? 25 : 15;
-                let url = '';
-                // Gunakan key 'default' untuk trending, dan query asli untuk search
-                let tokenKey = isTrending ? 'default' : currentQuery;
-
-                if (isTrending) {
-                    // FIX: Gunakan kata kunci "trending shorts" agar pasti dapat hasil
-                    url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=${encodeURIComponent(currentQuery)}&type=video&videoDuration=short&order=viewCount&regionCode=${userRegion}&key=${API_KEY}`;
-                } else {
-                    url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=${encodeURIComponent(currentQuery)}&type=video&videoDuration=short&order=relevance&key=${API_KEY}`;
-                }
-
-                if (pageTokens[tokenKey]) {
-                    url += `&pageToken=${pageTokens[tokenKey]}`;
-                }
-
-                const response = await fetch(url);
-                const data = await response.json();
-
-                document.getElementById('loadingMore').style.display = 'none';
-                isLoading = false;
-
-                if (data.error) {
-                    console.error("API Error:", data.error);
-                    throw new Error(data.error.message);
-                }
-                
-                if (!data.items || data.items.length === 0) {
-                    hasMoreData = false;
-                    if (currentPage === 1) showError("No results found. Try another topic.");
-                    return;
-                }
-
-                pageTokens[tokenKey] = data.nextPageToken || null;
-                if (!data.nextPageToken) hasMoreData = false;
-
-                displayVideos(data.items);
-                currentPage++;
-
-            } catch (err) {
-                isLoading = false;
-                document.getElementById('loadingMore').style.display = 'none';
-                if (currentPage === 1) showError(`Error: ${err.message}`);
-                else console.error("Load more failed:", err);
-            }
-        }
-
-        function loadMoreVideos() {
-            if (isTrendingMode) loadTrendingShorts(false);
-            else performSearch(null, false);
-        }
-
-        function setActiveChip(id) {
+            // Reset Active Chip
             document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-            if(id) document.getElementById(id).classList.add('active');
+            const chipId = category === 'trending' ? 'chip-trending' : `chip-${category}`;
+            if(document.getElementById(chipId)) document.getElementById(chipId).classList.add('active');
+
+            const query = queries[category] || 'viral shorts';
+            await fetchVideos(query);
+        }
+
+        async function fetchVideos(query) {
+            const maxResults = 50; // Ambil 50 sekaligus!
+            let success = false;
+            let triedKeys = 0;
+
+            while (!success && triedKeys < API_KEYS.length) {
+                const apiKey = API_KEYS[currentKeyIndex];
+                
+                try {
+                    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=${encodeURIComponent(query)}&type=video&videoDuration=short&order=viewCount&regionCode=${userRegion}&key=${apiKey}`;
+                    
+                    const response = await fetch(url);
+                    const data = await response.json();
+
+                    if (data.error && data.error.errors[0].reason === 'quotaExceeded') {
+                        // Key habis, ganti ke berikutnya
+                        console.warn(`Key ${currentKeyIndex} exceeded. Switching...`);
+                        currentKeyIndex = (currentKeyIndex + 1) % API_KEYS.length;
+                        triedKeys++;
+                        continue; // Loop ulang dengan key baru
+                    }
+
+                    if (data.error) throw new Error(data.error.message);
+
+                    // Sukses!
+                    displayVideos(data.items);
+                    success = true;
+
+                } catch (err) {
+                    console.error(err);
+                    // Jika error bukan quota, coba key berikutnya juga untuk jaga-jaga
+                    currentKeyIndex = (currentKeyIndex + 1) % API_KEYS.length;
+                    triedKeys++;
+                }
+            }
+
+            document.getElementById('loadingState').style.display = 'none';
+            if (!success) {
+                document.getElementById('errorMsg').innerText = "All API keys exceeded or error. Try again later.";
+                document.getElementById('errorMsg').style.display = 'block';
+            }
         }
 
         function displayVideos(items) {
             const grid = document.getElementById('videoGrid');
+            if (!items || items.length === 0) {
+                document.getElementById('errorMsg').innerText = "No videos found.";
+                document.getElementById('errorMsg').style.display = 'block';
+                return;
+            }
             items.forEach(item => {
                 const videoId = item.id.videoId;
                 const snippet = item.snippet;
                 if (!snippet.thumbnails) return;
                 const thumbUrl = snippet.thumbnails.high ? snippet.thumbnails.high.url : snippet.thumbnails.medium.url;
-                const card = createVideoCard(videoId, snippet.title, snippet.channelTitle, thumbUrl);
+                
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.onclick = () => openModal(videoId);
+                const isSaved = favorites.some(v => v.id === videoId);
+                
+                card.innerHTML = `
+                    <div class="thumbnail-container">
+                        <img src="${thumbUrl}" class="thumbnail" alt="${snippet.title}" loading="lazy">
+                        <div class="play-icon">▶</div>
+                        <div class="shorts-badge">SHORTS</div>
+                        <div class="card-actions">
+                            <button class="action-btn ${isSaved ? 'favorited' : ''}" onclick="toggleFavorite('${videoId}', '${snippet.title.replace(/'/g, "\\'")}', '${snippet.channelTitle.replace(/'/g, "\\'")}', '${thumbUrl}', event)">
+                                ${isSaved ? '❤️' : '🤍'}
+                            </button>
+                            <button class="action-btn" onclick="shareVideo('${videoId}', '${snippet.title.replace(/'/g, "\\'")}', event)">📤</button>
+                        </div>
+                    </div>
+                    <div class="info">
+                        <div class="title">${snippet.title}</div>
+                        <div class="stats">${snippet.channelTitle}</div>
+                    </div>
+                `;
                 grid.appendChild(card);
             });
         }
 
-        function showError(msg) {
-            const el = document.getElementById('errorMsg');
-            el.innerText = msg;
-            el.style.display = 'block';
-        }
-
-        function toggleFavorite(videoId, title, channel, thumbUrl, event) {
-            event.stopPropagation();
-            const index = favorites.findIndex(v => v.id === videoId);
-            if (index === -1) {
-                favorites.push({ id: videoId, title, channel, thumb: thumbUrl });
-                event.target.classList.add('favorited');
-                event.target.innerText = '❤️';
-            } else {
-                favorites.splice(index, 1);
-                event.target.classList.remove('favorited');
-                event.target.innerText = '🤍';
-                if(document.getElementById('favoritesView').style.display === 'block') renderFavorites();
-            }
+        // Favorites & Share Logic (Same as before)
+        function toggleFavorite(id, title, channel, thumb, e) {
+            e.stopPropagation();
+            const idx = favorites.findIndex(v => v.id === id);
+            if (idx === -1) { favorites.push({id, title, channel, thumb}); e.target.classList.add('favorited'); e.target.innerText='❤️'; }
+            else { favorites.splice(idx, 1); e.target.classList.remove('favorited'); e.target.innerText='🤍'; if(document.getElementById('favoritesView').style.display==='block') renderFavorites(); }
             localStorage.setItem('viralScopeFavorites', JSON.stringify(favorites));
         }
 
         function renderFavorites() {
-            const grid = document.getElementById('favGrid');
-            const emptyMsg = document.getElementById('emptyFavMsg');
-            grid.innerHTML = '';
-            if (favorites.length === 0) { emptyMsg.style.display = 'block'; return; }
-            emptyMsg.style.display = 'none';
-            favorites.forEach(item => {
-                grid.appendChild(createVideoCard(item.id, item.title, item.channel, item.thumb, true));
+            const grid = document.getElementById('favGrid'); grid.innerHTML='';
+            if(favorites.length===0) { document.getElementById('emptyFavMsg').style.display='block'; return; }
+            document.getElementById('emptyFavMsg').style.display='none';
+            favorites.forEach(f => {
+                const card = document.createElement('div'); card.className='video-card'; card.onclick=()=>openModal(f.id);
+                card.innerHTML = `<div class="thumbnail-container"><img src="${f.thumb}" class="thumbnail"><div class="play-icon">▶</div></div><div class="info"><div class="title">${f.title}</div><div class="stats">${f.channel}</div></div>`;
+                grid.appendChild(card);
             });
         }
 
-        function createVideoCard(id, title, channel, thumbUrl, isFavCheck = false) {
-            const card = document.createElement('div');
-            card.className = 'video-card';
-            card.onclick = () => openModal(id);
-            const isSaved = favorites.some(v => v.id === id);
-            card.innerHTML = `
-                <div class="thumbnail-container">
-                    <img src="${thumbUrl}" class="thumbnail" alt="${title}" loading="lazy">
-                    <div class="play-icon">▶</div>
-                    <div class="shorts-badge">SHORTS</div>
-                    <div class="card-actions">
-                        <button class="action-btn ${isSaved ? 'favorited' : ''}" onclick="toggleFavorite('${id}', '${title.replace(/'/g, "\\'")}', '${channel.replace(/'/g, "\\'")}', '${thumbUrl}', event)">
-                            ${isSaved ? '❤️' : '🤍'}
-                        </button>
-                        <button class="action-btn" onclick="shareVideo('${id}', '${title.replace(/'/g, "\\'")}', event)">📤</button>
-                    </div>
-                </div>
-                <div class="info">
-                    <div class="title">${title}</div>
-                    <div class="stats">${channel}</div>
-                </div>
-            `;
-            return card;
+        async function shareVideo(id, title, e) {
+            e.stopPropagation();
+            const url = `https://www.youtube.com/watch?v=${id}`;
+            if(navigator.share) try{ await navigator.share({title, text:title, url}); }catch(err){}
+            else { await navigator.clipboard.writeText(url); alert('Link copied!'); }
         }
 
-        async function shareVideo(videoId, title, event) {
-            event.stopPropagation();
-            const url = `https://www.youtube.com/watch?v=${videoId}`;
-            if (navigator.share) {
-                try { await navigator.share({ title, text: title, url }); } catch (err) {}
-            } else {
-                await navigator.clipboard.writeText(url);
-                alert('Link copied!');
-            }
+        function openModal(id) {
+            document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+            document.getElementById('videoModal').style.display = 'flex';
         }
-
-        function openModal(videoId) {
-            const modal = document.getElementById('videoModal');
-            const player = document.getElementById('youtubePlayer');
-            player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            modal.style.display = 'flex';
-        }
-
         function closeModal() {
-            const modal = document.getElementById('videoModal');
-            const player = document.getElementById('youtubePlayer');
-            player.src = '';
-            modal.style.display = 'none';
+            document.getElementById('youtubePlayer').src = '';
+            document.getElementById('videoModal').style.display = 'none';
         }
 
-        document.getElementById('searchInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') performSearch();
-        });
-
+        // Init
         window.onload = function() {
             detectRegion();
             changeLanguage();
-            if(API_KEY && API_KEY.length > 20) {
-                loadTrendingShorts();
+            // Initial Load
+            if(API_KEYS[0] && API_KEYS[0] !== 'KEY_1_DISINI') {
+                loadCategory('trending');
             } else {
-                showError("⚠️ Please insert your YouTube API Key in the code.");
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('errorMsg').innerText = "⚠️ Please edit code and insert your 5 API Keys.";
+                document.getElementById('errorMsg').style.display = 'block';
             }
+            
+            // Setup initial mobile/lang visibility
+            window.dispatchEvent(new Event('resize'));
         };
     </script>
 </body>
