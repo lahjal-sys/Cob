@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ViralScope - Smart Infinite Scroll</title>
+    <title>ViralScope - Top Shorts Now</title>
     <style>
         :root {
             --bg: #0f0f0f; --card-bg: #1e1e1e; --text: #ffffff; --text-sec: #aaaaaa;
@@ -19,7 +19,6 @@
 
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; min-height: 100vh; transition: background 0.3s, color 0.3s; scroll-behavior: smooth; }
         
-        /* Dynamic Navbar */
         nav {
             width: 100%; padding: 15px 40px; box-sizing: border-box;
             background: var(--nav-bg); backdrop-filter: blur(12px);
@@ -40,7 +39,6 @@
         .icon-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.1); }
         .lang-select { background: var(--chip-bg); color: var(--text); border: 1px solid var(--border); padding: 6px 10px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; outline: none; }
 
-        /* Header */
         header { width: 100%; padding: 40px 20px 20px; text-align: center; max-width: 800px; margin: 0 auto; }
         h1 { font-size: 2.5rem; margin: 0 0 10px 0; letter-spacing: -1px; }
         p.subtitle { color: var(--text-sec); font-size: 1rem; margin-bottom: 20px; }
@@ -56,7 +54,6 @@
         .chip:hover { background: var(--border); color: var(--text); }
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
 
-        /* Grid & Cards */
         .container { width: 90%; max-width: 1200px; padding: 20px; margin: 0 auto 50px; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .section-title { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
@@ -83,7 +80,6 @@
         .action-btn:hover { background: var(--primary); transform: scale(1.1); }
         .action-btn.favorited { background: var(--primary); }
 
-        /* Loading & Back to Top */
         .loading-more { text-align: center; padding: 20px; color: var(--text-sec); font-size: 0.9rem; display: none; }
         .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid var(--chip-bg); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; vertical-align: middle; margin-right: 10px; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -101,7 +97,6 @@
         #backToTop.visible { opacity: 1; pointer-events: all; transform: translateY(0); }
         #backToTop:hover { transform: translateY(-5px); background: #d60043; }
 
-        /* Modal & Favorites (Same as before) */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 1000; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(5px); }
         .modal-content { width: 90%; max-width: 500px; aspect-ratio: 9/16; background: black; border-radius: 12px; overflow: hidden; max-height: 80vh; }
         iframe { width: 100%; height: 100%; border: none; }
@@ -137,11 +132,10 @@
         </div>
     </nav>
 
-    <!-- Home View -->
     <div id="homeView">
         <header>
-            <h1 id="txt-title">Trending Shorts</h1>
-            <p class="subtitle" id="txt-subtitle">Smart infinite scroll, zero boredom.</p>
+            <h1 id="txt-title">Viral Shorts Now</h1>
+            <p class="subtitle" id="txt-subtitle">Most viewed shorts in your region today.</p>
             
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Search topics...">
@@ -149,7 +143,7 @@
             </div>
 
             <div class="filters">
-                <div class="chip shorts active" onclick="loadTrendingShorts()" id="chip-shorts">🔥 Trending</div>
+                <div class="chip shorts active" onclick="loadTrendingShorts()" id="chip-shorts">🔥 Viral Now</div>
                 <div class="chip" onclick="performSearch('AI Technology')" id="chip-ai">🤖 AI</div>
                 <div class="chip" onclick="performSearch('Funny Cats')" id="chip-funny">🐱 Funny</div>
                 <div class="chip" onclick="performSearch('Gaming')" id="chip-gaming">🎮 Gaming</div>
@@ -159,19 +153,17 @@
 
         <div class="container">
             <div class="section-header">
-                <div id="sectionHeader" class="section-title">Global Trending Shorts</div>
+                <div id="sectionHeader" class="section-title">Loading Local Trends...</div>
             </div>
             <div id="errorMsg" class="error-msg"></div>
             <div class="video-grid" id="videoGrid"></div>
             
-            <!-- Infinite Scroll Loader -->
             <div id="loadingMore" class="loading-more">
-                <span class="spinner"></span> <span id="txt-loading-more">Loading more viral videos...</span>
+                <span class="spinner"></span> <span id="txt-loading-more">Loading more...</span>
             </div>
         </div>
     </div>
 
-    <!-- Favorites View -->
     <div id="favoritesView">
         <div class="fav-header">
             <h2 id="txt-fav-title">My Saved Videos ❤️</h2>
@@ -183,7 +175,6 @@
         </div>
     </div>
 
-    <!-- Player Modal -->
     <div class="modal" id="videoModal">
         <div class="modal-content">
             <iframe id="youtubePlayer" src="" allowfullscreen></iframe>
@@ -191,31 +182,51 @@
         <button class="close-btn" onclick="closeModal()" id="txt-btn-close">Close Player</button>
     </div>
 
-    <!-- Back to Top Button -->
     <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
 
     <script>
-        // ⚠️ PASTE YOUR API KEY HERE
         const API_KEY = 'AIzaSyBGH3y7ZJwEtETVd1hQmwzBlZFmsvKBUJE'; 
 
-        // State Management for Pagination
         let currentPage = 1;
         let currentQuery = '';
         let isTrendingMode = true;
         let isLoading = false;
         let hasMoreData = true;
         let favorites = JSON.parse(localStorage.getItem('viralScopeFavorites')) || [];
+        let pageTokens = {}; 
+        let userRegion = 'ID'; // Default ke Indonesia biar aman dulu
 
         const translations = {
-            en: { title: "Trending Shorts", subtitle: "Smart infinite scroll, zero boredom.", searchPlaceholder: "Search topics...", btnSearch: "Search", chipShorts: "🔥 Trending", chipAi: "🤖 AI", chipFunny: "🐱 Funny", chipGaming: "🎮 Gaming", chipMusic: "🎵 Music", sectionTrending: "Global Trending", sectionSearch: "Search Results", btnClose: "Close", favTitle: "My Saved Videos ❤️", emptyFav: "No saved videos yet.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Loading more viral videos..." },
-            id: { title: "Shorts Trending", subtitle: "Scroll tanpa batas, anti bosen.", searchPlaceholder: "Cari topik...", btnSearch: "Cari", chipShorts: "🔥 Trending", chipAi: "🤖 AI", chipFunny: "🐱 Lucu", chipGaming: "🎮 Gaming", chipMusic: "🎵 Musik", sectionTrending: "Trending Global", sectionSearch: "Hasil Pencarian", btnClose: "Tutup", favTitle: "Video Tersimpan ❤️", emptyFav: "Belum ada video tersimpan.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Memuat video lainnya..." },
-            es: { title: "Shorts Tendencias", subtitle: "Desplazamiento infinito inteligente.", searchPlaceholder: "Buscar...", btnSearch: "Buscar", chipShorts: "🔥 Tendencias", chipAi: "🤖 IA", chipFunny: "🐱 Gracioso", chipGaming: "🎮 Juegos", chipMusic: "🎵 Música", sectionTrending: "Tendencias", sectionSearch: "Resultados", btnClose: "Cerrar", favTitle: "Mis Guardados ❤️", emptyFav: "Sin videos guardados.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Cargando más..." },
-            jp: { title: "トレンドショート", subtitle: "スマートな無限スクロール。", searchPlaceholder: "検索...", btnSearch: "検索", chipShorts: "🔥 トレンド", chipAi: "🤖 AI", chipFunny: "🐱 面白い", chipGaming: "🎮 ゲーム", chipMusic: "🎵 音楽", sectionTrending: "グローバル", sectionSearch: "検索結果", btnClose: "閉じる", favTitle: "保存した動画 ❤️", emptyFav: "保存された動画はありません。", themeLight: "☀️", themeDark: "🌙", loadingMore: "読み込み中..." }
+            en: { title: "Viral Shorts Now", subtitle: "Most viewed shorts in your region today.", searchPlaceholder: "Search topics...", btnSearch: "Search", chipShorts: "🔥 Viral Now", chipAi: "🤖 AI", chipFunny: "🐱 Funny", chipGaming: "🎮 Gaming", chipMusic: "🎵 Music", sectionTrending: "Viral Now", sectionSearch: "Search Results", btnClose: "Close", favTitle: "My Saved Videos ❤️", emptyFav: "No saved videos yet.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Loading more..." },
+            id: { title: "Shorts Viral Sekarang", subtitle: "Shorts paling banyak ditonton di negaramu hari ini.", searchPlaceholder: "Cari topik...", btnSearch: "Cari", chipShorts: "🔥 Viral Sekarang", chipAi: "🤖 AI", chipFunny: "🐱 Lucu", chipGaming: "🎮 Gaming", chipMusic: "🎵 Musik", sectionTrending: "Viral Sekarang", sectionSearch: "Hasil Pencarian", btnClose: "Tutup", favTitle: "Video Tersimpan ❤️", emptyFav: "Belum ada video tersimpan.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Memuat lagi..." },
+            es: { title: "Shorts Virales Ahora", subtitle: "Los más vistos en tu región hoy.", searchPlaceholder: "Buscar...", btnSearch: "Buscar", chipShorts: "🔥 Viral Ahora", chipAi: "🤖 IA", chipFunny: "🐱 Gracioso", chipGaming: "🎮 Juegos", chipMusic: "🎵 Música", sectionTrending: "Viral Ahora", sectionSearch: "Resultados", btnClose: "Cerrar", favTitle: "Mis Guardados ❤️", emptyFav: "Sin videos guardados.", themeLight: "☀️", themeDark: "🌙", loadingMore: "Cargando más..." },
+            jp: { title: "バイラルショート", subtitle: "あなたの地域で最も視聴されたショート。", searchPlaceholder: "検索...", btnSearch: "検索", chipShorts: "🔥 今バイラル", chipAi: "🤖 AI", chipFunny: "🐱 面白い", chipGaming: "🎮 ゲーム", chipMusic: "🎵 音楽", sectionTrending: "今バイラル", sectionSearch: "検索結果", btnClose: "閉じる", favTitle: "保存した動画 ❤️", emptyFav: "保存された動画はありません。", themeLight: "☀️", themeDark: "🌙", loadingMore: "読み込み中..." }
         };
 
         let currentLang = 'en';
 
-        // --- UI INTERACTIONS ---
+        function detectRegion() {
+            const lang = navigator.language || navigator.userLanguage; 
+            if (lang.includes('id')) userRegion = 'ID';
+            else if (lang.includes('es')) userRegion = 'ES';
+            else if (lang.includes('ja')) userRegion = 'JP';
+            else if (lang.includes('de')) userRegion = 'DE';
+            else if (lang.includes('fr')) userRegion = 'FR';
+            else if (lang.includes('pt')) userRegion = 'BR';
+            else if (lang.includes('ru')) userRegion = 'RU';
+            else if (lang.includes('ko')) userRegion = 'KR';
+            else userRegion = 'US';
+            console.log("Region Set to:", userRegion);
+            updateHeaderText();
+        }
+
+        function updateHeaderText() {
+            const t = translations[currentLang];
+            const regionName = userRegion === 'ID' ? 'Indonesia' : userRegion === 'US' ? 'Global' : userRegion;
+            document.getElementById('sectionHeader').innerText = isTrendingMode ? 
+                `${t.sectionTrending} (${regionName})` : t.sectionSearch;
+        }
+
         function toggleTheme() {
             const body = document.body;
             const btn = document.getElementById('themeBtn');
@@ -236,7 +247,6 @@
             document.getElementById('themeBtn').innerText = '☀️';
         }
 
-        // Sticky Navbar Effect
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             const backToTop = document.getElementById('backToTop');
@@ -247,8 +257,6 @@
                 nav.classList.remove('scrolled');
                 backToTop.classList.remove('visible');
             }
-            
-            // Infinite Scroll Trigger
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800 && !isLoading && hasMoreData) {
                 loadMoreVideos();
             }
@@ -272,14 +280,7 @@
             document.getElementById('chip-gaming').innerText = t.chipGaming;
             document.getElementById('chip-music').innerText = t.chipMusic;
 
-            const grid = document.getElementById('videoGrid');
-            if(grid.innerHTML.trim() === '') {
-                document.getElementById('sectionHeader').innerText = t.sectionTrending;
-            } else if (document.getElementById('sectionHeader').classList.contains('search-mode')) {
-                document.getElementById('sectionHeader').innerText = t.sectionSearch;
-            } else {
-                document.getElementById('sectionHeader').innerText = t.sectionTrending;
-            }
+            updateHeaderText();
             if(document.getElementById('favoritesView').style.display === 'block') showFavorites();
         }
 
@@ -296,20 +297,23 @@
             window.scrollTo(0,0);
         }
 
-        // --- CORE LOGIC (PAGINATION) ---
+        // --- CORE LOGIC FIXED ---
         async function loadTrendingShorts(reset = true) {
             if (!API_KEY || API_KEY.length < 20) { showError("⚠️ API Key Missing!"); return; }
+            
             if (reset) {
                 document.getElementById('videoGrid').innerHTML = '';
                 document.getElementById('errorMsg').style.display = 'none';
-                document.getElementById('sectionHeader').innerText = translations[currentLang].sectionTrending;
                 document.getElementById('sectionHeader').classList.remove('search-mode');
                 setActiveChip('chip-shorts');
                 currentPage = 1;
                 currentQuery = '';
                 isTrendingMode = true;
                 hasMoreData = true;
+                pageTokens['trending'] = ''; 
             }
+            
+            updateHeaderText();
             await fetchVideos(true);
         }
 
@@ -328,6 +332,7 @@
                 currentQuery = query;
                 isTrendingMode = false;
                 hasMoreData = true;
+                pageTokens[query] = ''; 
             }
             await fetchVideos(false);
         }
@@ -337,33 +342,26 @@
             isLoading = true;
             
             if (currentPage === 1) {
-                document.getElementById('loadingMore').style.display = 'none'; // Hide loader on first load
+                document.getElementById('loadingMore').style.display = 'none';
             } else {
                 document.getElementById('loadingMore').style.display = 'block';
             }
 
             try {
-                // STRATEGY: First load 25, subsequent loads 15
                 const maxResults = (currentPage === 1) ? 25 : 15;
                 let url = '';
+                let tokenKey = isTrending ? 'trending' : currentQuery;
 
                 if (isTrending) {
-                    // YouTube Trending doesn't support pageToken easily for "Shorts" specifically without search trick
-                    // We use search with empty query sorted by viewCount for better "Shorts" simulation if needed, 
-                    // but standard 'videos?chart=mostPopular' is best for true trending.
-                    // Note: 'videos' endpoint doesn't support pagination token in the same way 'search' does for free tier sometimes.
-                    // To keep it simple and robust for this demo, we will use 'search' endpoint for BOTH to ensure pagination works smoothly with tokens.
-                    // For trending simulation: search "" order=viewCount videoDuration=short
-                    const q = isTrending ? '' : currentQuery;
-                    const order = isTrending ? 'viewCount' : 'relevance';
-                    url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=${encodeURIComponent(q)}&type=video&videoDuration=short&order=${order}&key=${API_KEY}`;
+                    // FIX: Gunakan SEARCH endpoint dengan query kosong, order by viewCount, duration short, dan regionCode
+                    // Ini adalah cara terbaik mendapatkan "Top Shorts" yang mirip trending
+                    url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=&type=video&videoDuration=short&order=viewCount&regionCode=${userRegion}&key=${API_KEY}`;
                 } else {
                     url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=${encodeURIComponent(currentQuery)}&type=video&videoDuration=short&order=relevance&key=${API_KEY}`;
                 }
 
-                // Add pageToken if not first page
-                if (currentPage > 1 && window.lastPageToken) {
-                    url += `&pageToken=${window.lastPageToken}`;
+                if (pageTokens[tokenKey]) {
+                    url += `&pageToken=${pageTokens[tokenKey]}`;
                 }
 
                 const response = await fetch(url);
@@ -372,16 +370,18 @@
                 document.getElementById('loadingMore').style.display = 'none';
                 isLoading = false;
 
-                if (data.error) throw new Error(data.error.message);
+                if (data.error) {
+                    console.error("API Error:", data.error);
+                    throw new Error(data.error.message);
+                }
                 
                 if (!data.items || data.items.length === 0) {
                     hasMoreData = false;
-                    if (currentPage === 1) showError("No results found.");
+                    if (currentPage === 1) showError("No results found. Try another region or topic.");
                     return;
                 }
 
-                // Save next page token
-                window.lastPageToken = data.nextPageToken || null;
+                pageTokens[tokenKey] = data.nextPageToken || null;
                 if (!data.nextPageToken) hasMoreData = false;
 
                 displayVideos(data.items, isTrending);
@@ -423,7 +423,6 @@
             el.style.display = 'block';
         }
 
-        // --- FAVORITES & SHARE (Same logic as before) ---
         function toggleFavorite(videoId, title, channel, thumbUrl, event) {
             event.stopPropagation();
             const index = favorites.findIndex(v => v.id === videoId);
@@ -505,8 +504,8 @@
             if (e.key === 'Enter') performSearch();
         });
 
-        // Init
         window.onload = function() {
+            detectRegion();
             changeLanguage();
             if(API_KEY && API_KEY.length > 20) {
                 loadTrendingShorts();
