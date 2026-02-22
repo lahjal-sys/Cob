@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ViralScope - Simple</title>
+    <title>ViralScope - Ultimate Fixed</title>
     <style>
         :root {
             --bg: #0f0f0f; --card-bg: #1e1e1e; --text: #ffffff; --text-sec: #aaaaaa;
@@ -19,47 +19,42 @@
 
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; min-height: 100vh; transition: background 0.3s, color 0.3s; }
         
-        /* --- SIMPLIFIED NAVBAR --- */
+        /* --- NAVBAR --- */
         nav {
             width: 100%; padding: 0 20px; box-sizing: border-box;
             background: var(--nav-bg); backdrop-filter: blur(10px);
             position: sticky; top: 0; z-index: 1000;
             border-bottom: 1px solid var(--border);
             height: var(--nav-height);
-            display: grid;
-            grid-template-columns: 1fr auto 1fr; /* Kiri - Tengah - Kanan */
-            align-items: center;
+            display: flex; align-items: center; justify-content: space-between;
         }
 
-        /* Kiri: Logo */
-        .nav-left { justify-self: start; }
+        .nav-left { display: flex; align-items: center; gap: 15px; }
         .logo { 
             font-size: 1.4rem; font-weight: 800; 
             background: linear-gradient(45deg, var(--primary), var(--secondary)); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
             cursor: pointer; text-decoration: none; white-space: nowrap; 
+            z-index: 1002;
         }
 
-        /* Tengah: Theme Toggle */
-        .nav-center { justify-self: center; display: flex; align-items: center; }
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        
         .theme-btn { 
             background: var(--chip-bg); border: 1px solid var(--border); 
             color: var(--text); width: 40px; height: 40px; 
             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; font-size: 1.2rem; transition: 0.2s; 
+            cursor: pointer; font-size: 1.2rem; transition: 0.2s; flex-shrink: 0;
         }
         .theme-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.1); }
 
-        /* Kanan: Hamburger Menu */
-        .nav-right { justify-self: end; }
         .hamburger { 
             display: flex; flex-direction: column; gap: 5px; 
             cursor: pointer; width: 30px; height: 24px; justify-content: center; 
-            z-index: 1002; 
+            z-index: 1002; flex-shrink: 0;
         }
         .bar { width: 100%; height: 3px; background-color: var(--text); border-radius: 2px; transition: 0.3s; }
         
-        /* Dropdown Menu (Full Screen Overlay Style for Mobile/Desktop consistency) */
         .dropdown-menu {
             display: none; position: fixed; top: var(--nav-height); right: 0;
             width: 280px; max-width: 90%;
@@ -81,28 +76,69 @@
         .menu-item:hover { background: var(--chip-bg); color: var(--primary); }
         .menu-item:last-child { border-bottom: none; }
 
-        /* Content & Search Bar (Tengah) */
+        /* Content & Search Bar */
         .container { width: 90%; max-width: 1200px; margin: 20px auto; padding-bottom: 50px; }
         
+        /* Search Box with Button */
         .search-box-container {
-            display: flex; justify-content: center; margin: 20px 0 30px 0;
+            display: flex; justify-content: center; margin: 20px 0 20px 0;
         }
+        .search-wrapper {
+            display: flex; align-items: center; background: var(--input-bg); 
+            border: 2px solid var(--border); border-radius: 30px; 
+            padding: 5px 15px; width: 100%; max-width: 500px; transition: 0.3s;
+        }
+        .search-wrapper:focus-within { border-color: var(--primary); box-shadow: 0 0 15px rgba(255, 0, 80, 0.2); }
+        
         .search-input { 
-            background: var(--input-bg); border: 2px solid var(--border); 
-            color: var(--text); padding: 12px 20px; border-radius: 30px; 
-            font-size: 1rem; outline: none; width: 100%; max-width: 500px; 
-            transition: 0.3s; text-align: center;
+            flex: 1; background: transparent; border: none; color: var(--text); 
+            font-size: 1rem; outline: none; padding: 8px; text-align: left;
         }
-        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(255, 0, 80, 0.2); }
+        .search-btn {
+            background: var(--primary); border: none; color: white;
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1.1rem; transition: 0.2s; flex-shrink: 0;
+        }
+        .search-btn:hover { transform: scale(1.1); background: #d60043; }
 
-        /* Filters */
-        .filters { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; }
-        .chip { background: var(--chip-bg); border: 1px solid var(--border); color: var(--chip-text); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; transition: 0.3s; }
+        /* Filters: FIXED WIDTH & SCROLL */
+        .filters { 
+            display: flex; 
+            justify-content: flex-start; /* Align left for scroll */
+            gap: 10px; 
+            margin: 0 auto 25px auto; /* Center the container itself */
+            overflow-x: auto; 
+            padding: 10px 15px; /* Padding kiri kanan biar item pertama tidak mepet */
+            scrollbar-width: none; 
+            max-width: 500px; /* SAMA DENGAN SEARCH BAR */
+            width: 100%;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch; /* Smooth scroll iOS */
+        }
+        .filters::-webkit-scrollbar { display: none; }
+        
+        .chip { 
+            background: var(--chip-bg); border: 1px solid var(--border); 
+            color: var(--chip-text); padding: 8px 16px; border-radius: 20px; 
+            font-size: 0.85rem; cursor: pointer; transition: 0.3s; white-space: nowrap;
+            flex-shrink: 0; /* Mencegah chip mengecil */
+        }
         .chip:hover { background: var(--border); color: var(--text); }
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
 
         /* Grid & Cards */
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, var(--chip-bg) 25%, var(--border) 50%, var(--chip-bg) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 16px; aspect-ratio: 9/16;
+        }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
         .video-card { background: var(--card-bg); border-radius: 16px; overflow: hidden; transition: 0.3s; cursor: pointer; border: 1px solid var(--border); position: relative; }
         .video-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         
@@ -111,6 +147,7 @@
         .video-card:hover .thumbnail { opacity: 1; transform: scale(1.05); }
         .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2.5rem; opacity: 0.8; text-shadow: 0 2px 10px rgba(0,0,0,0.8); pointer-events: none; }
         .shorts-badge { position: absolute; top: 10px; right: 10px; background: rgba(255, 0, 80, 0.9); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+        .watermark { position: absolute; top: 10px; left: 10px; font-size: 0.7rem; font-weight: bold; color: rgba(255,255,255,0.7); text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; z-index: 2; }
 
         .info { padding: 12px; }
         .title { font-size: 0.95rem; font-weight: 600; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; color: var(--text); }
@@ -146,6 +183,33 @@
         .load-more-btn:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255, 0, 80, 0.5); }
         .load-more-btn:disabled { background: var(--chip-bg); color: var(--text-sec); cursor: not-allowed; transform: none; box-shadow: none; }
 
+        /* Back to Top Button */
+        #backToTop {
+            position: fixed; bottom: 30px; right: 30px;
+            background: var(--primary); color: white;
+            width: 50px; height: 50px; border-radius: 50%;
+            border: none; font-size: 1.5rem; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 0, 80, 0.4);
+            opacity: 0; pointer-events: none; transform: translateY(20px);
+            transition: all 0.3s ease; z-index: 900;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #backToTop.visible { opacity: 1; pointer-events: all; transform: translateY(0); }
+        #backToTop:hover { transform: translateY(-5px); background: #d60043; }
+
+        /* Toast Notification */
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: var(--card-bg); 
+            color: var(--text); text-align: center; border-radius: 30px; padding: 16px; 
+            position: fixed; z-index: 3000; left: 50%; bottom: 30px; 
+            transform: translateX(-50%); font-size: 0.9rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
         /* Loading & Error */
         .loading-state { text-align: center; padding: 40px; color: var(--text-sec); font-size: 1.1rem; }
         .spinner { display: inline-block; width: 30px; height: 30px; border: 4px solid var(--chip-bg); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; vertical-align: middle; margin-right: 10px; }
@@ -154,10 +218,23 @@
 
         /* Modal & Favorites */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(5px); }
-        .modal-content { width: 90%; max-width: 500px; aspect-ratio: 9/16; background: black; border-radius: 12px; overflow: hidden; max-height: 80vh; }
+        .modal-content { width: 90%; max-width: 500px; aspect-ratio: 9/16; background: black; border-radius: 12px; overflow: hidden; max-height: 80vh; position: relative; }
         iframe { width: 100%; height: 100%; border: none; }
-        .close-btn { margin-top: 20px; background: transparent; border: 2px solid var(--border); padding: 10px 30px; border-radius: 30px; cursor: pointer; color: var(--text); font-weight: bold; }
         
+        .modal-controls {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 90%; max-width: 500px; margin-top: 15px;
+        }
+        .modal-btn {
+            background: var(--chip-bg); border: 1px solid var(--border);
+            color: var(--text); width: 45px; height: 45px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1.2rem; transition: 0.2s;
+        }
+        .modal-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.1); }
+        .modal-btn.close { width: 55px; height: 55px; font-size: 1.5rem; background: var(--bg); border: 2px solid var(--border); }
+        .modal-btn.close:hover { background: var(--text); color: var(--bg); }
+
         #favoritesView { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1500; overflow-y: auto; padding: 80px 20px 20px; box-sizing: border-box; }
         .fav-header { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto 20px; }
         .close-fav { background: var(--chip-bg); border: 1px solid var(--border); color: var(--text); padding: 8px 20px; border-radius: 20px; cursor: pointer; }
@@ -166,17 +243,12 @@
 </head>
 <body>
 
-    <!-- NAVBAR: Logo - Theme - Hamburger -->
     <nav>
         <div class="nav-left">
             <a href="#" class="logo" onclick="loadCategory('trending'); return false;">⚡ ViralScope</a>
         </div>
-
-        <div class="nav-center">
-            <button class="theme-btn" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
-        </div>
-
         <div class="nav-right">
+            <button class="theme-btn" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
             <div class="hamburger" onclick="toggleMenu()">
                 <div class="bar"></div>
                 <div class="bar"></div>
@@ -185,21 +257,11 @@
         </div>
     </nav>
 
-    <!-- DROPDOWN MENU (Isi Lengkap) -->
     <div class="dropdown-menu" id="dropdownMenu">
-        <a class="menu-item" onclick="loadCategory('trending'); toggleMenu()">
-            Home <span>🏠</span>
-        </a>
-        <a class="menu-item" onclick="alert('AI Generator Coming Soon!'); toggleMenu()">
-            AI Generator <span>🤖</span>
-        </a>
-        <a class="menu-item" href="https://google.com" target="_blank" onclick="toggleMenu()">
-            External Links <span>🔗</span>
-        </a>
-        <a class="menu-item" onclick="showFavorites(); toggleMenu()">
-            Favorites <span>❤️</span>
-        </a>
-        <!-- Language Selector inside Menu -->
+        <a class="menu-item" onclick="loadCategory('trending'); toggleMenu()">Home <span>🏠</span></a>
+        <a class="menu-item" onclick="alert('AI Generator Coming Soon!'); toggleMenu()">AI Generator <span>🤖</span></a>
+        <a class="menu-item" href="https://google.com" target="_blank" onclick="toggleMenu()">External Links <span>🔗</span></a>
+        <a class="menu-item" onclick="showFavorites(); toggleMenu()">Favorites <span>❤️</span></a>
         <div style="padding: 15px 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
             <span style="color:var(--text); font-weight:600;">Language</span>
             <select id="langSelect" style="background:var(--chip-bg); color:var(--text); border:1px solid var(--border); padding:5px 10px; border-radius:15px; outline:none;" onchange="changeLanguage()">
@@ -211,9 +273,8 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div id="homeView" class="container">
-        <!-- Filters -->
+        <!-- Filters: Max-width sama dengan search bar -->
         <div class="filters">
             <div class="chip active" onclick="loadCategory('trending')" id="chip-trending">🔥 Viral Now</div>
             <div class="chip" onclick="loadCategory('funny')" id="chip-funny">🐱 Funny</div>
@@ -222,9 +283,11 @@
             <div class="chip" onclick="loadCategory('music')" id="chip-music">🎵 Music</div>
         </div>
 
-        <!-- Search Bar (Tengah) -->
         <div class="search-box-container">
-            <input type="text" id="searchInput" class="search-input" placeholder="Search viral videos..." onkeypress="if(event.key==='Enter') performSearch()">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search viral videos..." onkeypress="if(event.key==='Enter') performSearch()">
+                <button class="search-btn" onclick="performSearch()">🔍</button>
+            </div>
         </div>
 
         <div id="errorMsg" class="error-msg"></div>
@@ -234,13 +297,11 @@
         
         <div class="video-grid" id="videoGrid"></div>
         
-        <!-- Load More Button -->
         <div class="load-more-container">
             <button id="loadMoreBtn" class="load-more-btn" onclick="loadMoreVideos()" style="display:none;">Load More Viral Videos</button>
         </div>
     </div>
 
-    <!-- Favorites View -->
     <div id="favoritesView">
         <div class="fav-header">
             <h2 id="txt-fav-title">My Saved Videos ❤️</h2>
@@ -250,16 +311,21 @@
         <div id="emptyFavMsg" style="text-align:center; color:var(--text-sec); margin-top:50px; display:none;">No saved videos yet.</div>
     </div>
 
-    <!-- Player Modal -->
     <div class="modal" id="videoModal">
         <div class="modal-content">
             <iframe id="youtubePlayer" src="" allowfullscreen></iframe>
         </div>
-        <button class="close-btn" onclick="closeModal()" id="txt-btn-close">Close Player</button>
+        <div class="modal-controls">
+            <button class="modal-btn" onclick="shareVideoFromModal()" title="Share">📤</button>
+            <button class="modal-btn close" onclick="closeModal()" id="txt-btn-close">✕</button>
+            <button class="modal-btn" onclick="toggleFavoriteFromModal()" id="modalFavBtn" title="Save">🤍</button>
+        </div>
     </div>
 
+    <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
+    <div id="toast">✅ Link copied to clipboard!</div>
+
     <script>
-        // ⚠️ MASUKKAN 5 API KEY KAMU DI SINI
         const API_KEYS = [
             'AIzaSyBGH3y7ZJwEtETVd1hQmwzBlZFmsvKBUJE', 
             'AIzaSyB8jJo5jvlTFSH2pLWSKlmNTnrGu2xojvg', 
@@ -277,6 +343,7 @@
         let hasMoreData = true;
         let isLoading = false;
         let totalVideosLoaded = 0;
+        let currentModalVideoId = null;
 
         const queries = {
             'trending': 'trending shorts',
@@ -287,10 +354,10 @@
         };
 
         const translations = {
-            en: { loading: "Loading viral videos...", btnClose: "Close", favTitle: "My Saved Videos ❤️", emptyFav: "No saved videos yet.", loadMore: "Load More Viral Videos", searchPlaceholder: "Search viral videos..." },
-            id: { loading: "Memuat video viral...", btnClose: "Tutup", favTitle: "Video Tersimpan ❤️", emptyFav: "Belum ada video tersimpan.", loadMore: "Muat Lebih Banyak", searchPlaceholder: "Cari video viral..." },
-            es: { loading: "Cargando videos...", btnClose: "Cerrar", favTitle: "Mis Guardados ❤️", emptyFav: "Sin videos guardados.", loadMore: "Cargar Más", searchPlaceholder: "Buscar videos..." },
-            jp: { loading: "読み込み中...", btnClose: "閉じる", favTitle: "保存した動画 ❤️", emptyFav: "保存された動画はありません。", loadMore: "もっと読み込む", searchPlaceholder: "動画を検索..." }
+            en: { loading: "Loading viral videos...", btnClose: "Close", favTitle: "My Saved Videos ❤️", emptyFav: "No saved videos yet.", loadMore: "Load More Viral Videos", searchPlaceholder: "Search viral videos...", toastCopy: "✅ Link copied to clipboard!" },
+            id: { loading: "Memuat video viral...", btnClose: "Tutup", favTitle: "Video Tersimpan ❤️", emptyFav: "Belum ada video tersimpan.", loadMore: "Muat Lebih Banyak", searchPlaceholder: "Cari video viral...", toastCopy: "✅ Link disalin!" },
+            es: { loading: "Cargando videos...", btnClose: "Cerrar", favTitle: "Mis Guardados ❤️", emptyFav: "Sin videos guardados.", loadMore: "Cargar Más", searchPlaceholder: "Buscar videos...", toastCopy: "¡✅ Enlace copiado!" },
+            jp: { loading: "読み込み中...", btnClose: "閉じる", favTitle: "保存した動画 ❤️", emptyFav: "保存された動画はありません。", loadMore: "もっと読み込む", searchPlaceholder: "動画を検索...", toastCopy: "✅ リンクをコピーしました！" }
         };
 
         let currentLang = 'en';
@@ -328,6 +395,23 @@
             document.getElementById('searchInput').placeholder = t.searchPlaceholder;
         }
 
+        function showToast() {
+            const t = translations[currentLang].toastCopy;
+            const x = document.getElementById("toast");
+            x.innerText = t;
+            x.className = "show";
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        }
+
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('backToTop');
+            if (window.scrollY > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
         function showHome() {
             document.getElementById('homeView').style.display = 'block';
             document.getElementById('favoritesView').style.display = 'none';
@@ -355,6 +439,9 @@
             document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
             const chipId = category === 'trending' ? 'chip-trending' : `chip-${category}`;
             if(document.getElementById(chipId)) document.getElementById(chipId).classList.add('active');
+
+            // Scroll filters to left when category changes
+            document.querySelector('.filters').scrollLeft = 0;
 
             await fetchVideos(true);
         }
@@ -388,6 +475,12 @@
                 document.getElementById('loadingState').style.display = 'block';
                 document.getElementById('loadMoreBtn').style.display = 'none';
             } else {
+                const grid = document.getElementById('videoGrid');
+                for(let i=0; i<6; i++) {
+                    const skel = document.createElement('div');
+                    skel.className = 'skeleton';
+                    grid.appendChild(skel);
+                }
                 document.getElementById('loadMoreBtn').disabled = true;
                 document.getElementById('loadMoreBtn').innerText = "Loading...";
             }
@@ -412,6 +505,11 @@
                     }
                     if (data.error) throw new Error(data.error.message);
 
+                    if(!isReset) {
+                        const skeletons = document.querySelectorAll('.skeleton');
+                        skeletons.forEach(s => s.remove());
+                    }
+
                     currentPageToken = data.nextPageToken || null;
                     if (!data.nextPageToken) hasMoreData = false;
                     
@@ -420,6 +518,10 @@
                     success = true;
 
                 } catch (err) {
+                    if(!isReset) {
+                        const skeletons = document.querySelectorAll('.skeleton');
+                        skeletons.forEach(s => s.remove());
+                    }
                     currentKeyIndex = (currentKeyIndex + 1) % API_KEYS.length;
                     triedKeys++;
                 }
@@ -479,6 +581,7 @@
             const isSaved = favorites.some(v => v.id === id);
             card.innerHTML = `
                 <div class="thumbnail-container">
+                    <div class="watermark">⚡ ViralScope</div>
                     <img src="${thumbUrl}" class="thumbnail" alt="${title}" loading="lazy">
                     <div class="play-icon">▶</div>
                     <div class="shorts-badge">SHORTS</div>
@@ -494,11 +597,34 @@
         }
 
         function toggleFavorite(id, title, channel, thumb, e) {
-            e.stopPropagation();
+            if(e) e.stopPropagation();
             const idx = favorites.findIndex(v => v.id === id);
-            if (idx === -1) { favorites.push({id, title, channel, thumb}); e.target.classList.add('favorited'); e.target.innerText='❤️'; }
-            else { favorites.splice(idx, 1); e.target.classList.remove('favorited'); e.target.innerText='🤍'; if(document.getElementById('favoritesView').style.display==='block') renderFavorites(); }
+            if (idx === -1) { 
+                favorites.push({id, title, channel, thumb}); 
+                if(e) { e.target.classList.add('favorited'); e.target.innerText='❤️'; }
+                updateModalFavButton(id);
+            } else { 
+                favorites.splice(idx, 1); 
+                if(e) { e.target.classList.remove('favorited'); e.target.innerText='🤍'; }
+                updateModalFavButton(id);
+                if(document.getElementById('favoritesView').style.display==='block') renderFavorites(); 
+            }
             localStorage.setItem('viralScopeFavorites', JSON.stringify(favorites));
+        }
+
+        function updateModalFavButton(id) {
+            const btn = document.getElementById('modalFavBtn');
+            if(!btn) return;
+            const isSaved = favorites.some(v => v.id === id);
+            btn.innerText = isSaved ? '❤️' : '🤍';
+            if(isSaved) btn.style.background = 'var(--primary)';
+            else btn.style.background = 'var(--chip-bg)';
+        }
+
+        function toggleFavoriteFromModal() {
+            if(currentModalVideoId) {
+                toggleFavorite(currentModalVideoId, '', '', '');
+            }
         }
 
         function renderFavorites() {
@@ -508,20 +634,36 @@
             favorites.forEach(f => grid.appendChild(createVideoCard(f.id, f.title, f.channel, f.thumb)));
         }
 
-        async function shareVideo(id, title, e) {
-            e.stopPropagation();
+        function shareVideo(id, title, e) {
+            if(e) e.stopPropagation();
+            doShare(id, title);
+        }
+
+        function shareVideoFromModal() {
+            if(currentModalVideoId) doShare(currentModalVideoId, "Check out this video!");
+        }
+
+        function doShare(id, title) {
             const url = `https://www.youtube.com/watch?v=${id}`;
-            if(navigator.share) try{ await navigator.share({title, text:title, url}); }catch(err){}
-            else { await navigator.clipboard.writeText(url); alert('Link copied!'); }
+            if(navigator.share) {
+                navigator.share({title: title, text: title, url: url}).catch(()=>{});
+            } else {
+                navigator.clipboard.writeText(url);
+                showToast();
+            }
         }
 
         function openModal(id) {
+            currentModalVideoId = id;
             document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
             document.getElementById('videoModal').style.display = 'flex';
+            updateModalFavButton(id);
         }
+
         function closeModal() {
             document.getElementById('youtubePlayer').src = '';
             document.getElementById('videoModal').style.display = 'none';
+            currentModalVideoId = null;
         }
 
         window.onload = function() {
