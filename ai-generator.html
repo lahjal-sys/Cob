@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- 1. CSS VARIABLES (SAMA PERSIS INDEX.HTML) --- */
+        /* --- CSS VARIABLES (SAMA PERSIS INDEX.HTML) --- */
         :root {
             --bg: #0f0f0f; --card-bg: #1e1e1e; --text: #ffffff; --text-sec: #aaaaaa;
             --nav-bg: rgba(15, 15, 15, 0.95); --input-bg: #2a2a2a; --border: #333;
@@ -31,7 +31,7 @@
             transition: background 0.3s, color 0.3s; 
         }
 
-        /* --- 2. NAVBAR (SAMA PERSIS) --- */
+        /* --- NAVBAR --- */
         nav {
             width: 100%; padding: 0 20px; box-sizing: border-box;
             background: var(--nav-bg); backdrop-filter: blur(10px);
@@ -40,7 +40,6 @@
             height: var(--nav-height);
             display: flex; align-items: center; justify-content: space-between;
         }
-
         .nav-left { display: flex; align-items: center; gap: 15px; }
         .logo { 
             font-size: 1.4rem; font-weight: 800; 
@@ -48,7 +47,6 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
             text-decoration: none; white-space: nowrap; z-index: 1002;
         }
-
         .nav-right { display: flex; align-items: center; gap: 15px; }
         
         .theme-btn { 
@@ -87,26 +85,21 @@
         .menu-item:hover { background: var(--chip-bg); color: var(--primary); }
         .menu-item:last-child { border-bottom: none; }
 
-        /* --- 3. CONTAINER & LAYOUT UTAMA (REVISI) --- */
+        /* --- CONTAINER & LAYOUT --- */
         .container { 
-            width: 90%; max-width: 600px; /* Lebih sempit agar fokus */
+            width: 90%; max-width: 600px; 
             margin: 30px auto; 
             padding-bottom: 50px; 
             text-align: center;
         }
-
         h1 { 
-            font-size: 2rem; 
-            margin-bottom: 10px; 
+            font-size: 2rem; margin-bottom: 10px; 
             background: linear-gradient(45deg, var(--primary), var(--secondary)); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
         }
         p.subtitle { color: var(--text-sec); margin-bottom: 40px; font-size: 1rem; }
 
-        /* --- 4. INPUT AREA (DESAIN BARU: KOtak + Tombol Bawah) --- */
-        /* Tidak ada lagi .generator-box (kartu abu-abu) */
-        
+        /* --- INPUT AREA (DESAIN BARU) --- */
         .prompt-input { 
             width: 100%;
             background: var(--input-bg); 
@@ -117,7 +110,7 @@
             padding: 15px; 
             outline: none; 
             font-family: 'Inter', sans-serif;
-            box-sizing: border-box; /* Agar padding tidak melebarkan elemen */
+            box-sizing: border-box;
             transition: 0.3s;
             text-align: left;
         }
@@ -127,9 +120,8 @@
         }
 
         .generate-btn {
-            width: 100%; /* Lebar penuh agar mudah ditekan di HP */
-            max-width: 100%;
-            margin-top: 15px; /* Jarak dari input */
+            width: 100%; 
+            margin-top: 15px; 
             background: linear-gradient(45deg, var(--primary), #d60043);
             border: none; 
             color: white;
@@ -147,7 +139,7 @@
         .generate-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 0, 80, 0.4); }
         .generate-btn:disabled { background: var(--chip-bg); color: var(--text-sec); cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* --- 5. HASIL GAMBAR --- */
+        /* --- HASIL GAMBAR --- */
         .result-area {
             margin-top: 40px;
             min-height: 300px;
@@ -157,7 +149,6 @@
             justify-content: center;
             position: relative;
         }
-
         .image-container {
             width: 100%;
             border-radius: 12px;
@@ -168,7 +159,6 @@
             animation: fadeIn 0.5s ease;
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
         .image-container img { width: 100%; height: auto; display: block; }
 
         .action-buttons {
@@ -179,7 +169,6 @@
             flex-wrap: wrap;
             width: 100%;
         }
-        
         .action-btn {
             background: var(--chip-bg); 
             border: 1px solid var(--border);
@@ -193,17 +182,15 @@
             align-items: center; 
             gap: 8px;
             transition: 0.2s;
-            flex: 1; /* Agar tombol merata */
+            flex: 1; 
             max-width: 150px;
             justify-content: center;
         }
         .action-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-2px); }
 
-        /* Loading Spinner */
         .loader {
             display: inline-block; 
-            width: 40px; 
-            height: 40px; 
+            width: 40px; height: 40px; 
             border: 4px solid var(--chip-bg); 
             border-top-color: var(--primary); 
             border-radius: 50%; 
@@ -222,7 +209,6 @@
         }
         .placeholder-icon { font-size: 4rem; opacity: 0.3; }
 
-        /* Toast */
         #toast {
             visibility: hidden; min-width: 250px; background-color: var(--card-bg); 
             color: var(--text); text-align: center; border-radius: 30px; padding: 16px; 
@@ -234,17 +220,14 @@
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
-        /* Language Select Style */
         .lang-select {
-            background: var(--chip-bg); 
-            color: var(--text); 
-            border: 1px solid var(--border); 
-            padding: 8px 12px; 
-            border-radius: 15px; 
-            outline: none;
-            font-size: 0.9rem;
+            background: var(--chip-bg); color: var(--text); border: 1px solid var(--border); 
+            padding: 8px 12px; border-radius: 15px; outline: none; font-size: 0.9rem;
         }
-
+        .api-warning {
+            background: rgba(255, 68, 68, 0.1); border: 1px solid #ff4444; color: #ff4444;
+            padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; display: none;
+        }
     </style>
 </head>
 <body>
@@ -257,22 +240,17 @@
         <div class="nav-right">
             <button class="theme-btn" onclick="toggleTheme()" title="Toggle Theme" id="themeBtn">🌙</button>
             <div class="hamburger" onclick="toggleMenu()">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
             </div>
         </div>
     </nav>
 
-    <!-- DROPDOWN MENU (URUTAN SAMA PERSIS INDEX.HTML) -->
+    <!-- DROPDOWN MENU -->
     <div class="dropdown-menu" id="dropdownMenu">
         <a class="menu-item" href="index.html" onclick="toggleMenu()">Home <span>🏠</span></a>
-        <!-- Link AI Generator aktif dengan warna primary -->
         <a class="menu-item" href="ai-generator.html" onclick="toggleMenu()" style="color:var(--primary);">AI Generator <span>🤖</span></a>
         <a class="menu-item" href="https://google.com" target="_blank" onclick="toggleMenu()">External Links <span>🔗</span></a>
         <a class="menu-item" href="#" onclick="alert('Favorites coming soon!'); toggleMenu()">Favorites <span>❤️</span></a>
-        
-        <!-- Language Section -->
         <div style="padding: 15px 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
             <span style="color:var(--text); font-weight:600;">Language</span>
             <select id="langSelect" class="lang-select" onchange="changeLanguage()">
@@ -287,15 +265,21 @@
     <!-- MAIN CONTENT -->
     <div class="container">
         <h1>AI Image Generator</h1>
-        <p class="subtitle">Create unique images from your imagination.</p>
+        <p class="subtitle">Powered by Pollinations AI (Authenticated)</p>
 
-        <!-- Input Area: Tanpa Kotak Kartu, Langsung Input + Tombol Bawah -->
+        <!-- PERINGATAN JIKA API KEY KOSONG -->
+        <div id="apiWarning" class="api-warning">
+            ⚠️ <strong>API Key Missing!</strong> Please edit the code and add your key from enter.pollinations.ai to fix Error 1033.
+        </div>
+
+        <!-- INPUT -->
         <input type="text" id="promptInput" class="prompt-input" placeholder="Describe your image (e.g., Cyberpunk cat eating noodles)..." autocomplete="off">
         
         <button class="generate-btn" id="generateBtn" onclick="generateImage()">
             <i class="fas fa-magic"></i> <span id="btnText">Generate Image</span>
         </button>
 
+        <!-- RESULT -->
         <div class="result-area" id="resultArea">
             <div class="placeholder-text" id="placeholderText">
                 <div class="placeholder-icon">🎨</div>
@@ -319,74 +303,77 @@
     <div id="toast">✅ Link copied to clipboard!</div>
 
     <script>
+        // ==========================================
+        // ⚙️ KONFIGURASI API KEY (EDIT DI SINI!)
+        // ==========================================
+        // 1. Buka enter.pollinations.ai dan login.
+        // 2. Copy API Key Anda.
+        // 3. Tempel di antara tanda kutip di bawah ini.
+        // Contoh: const POLLINATIONS_API_KEY = "pk_1234567890abcdef";
+        
+        const POLLINATIONS_API_KEY = "sk_iNHObCTeKhjWoAP3iHzrnDfvlmugRtYa"; 
+        
+        // ==========================================
+
         // --- 1. LOGIKA TEMA ---
         function toggleTheme() {
             const body = document.body;
             const btn = document.getElementById('themeBtn');
             const isDark = body.getAttribute('data-theme') !== 'light';
-            
             if (isDark) { 
-                body.setAttribute('data-theme', 'light'); 
-                btn.innerText = '☀️'; 
-                localStorage.setItem('viralScopeTheme', 'light');
+                body.setAttribute('data-theme', 'light'); btn.innerText = '☀️'; localStorage.setItem('viralScopeTheme', 'light');
             } else { 
-                body.removeAttribute('data-theme'); 
-                btn.innerText = '🌙'; 
-                localStorage.setItem('viralScopeTheme', 'dark');
+                body.removeAttribute('data-theme'); btn.innerText = '🌙'; localStorage.setItem('viralScopeTheme', 'dark');
             }
         }
-
-        // Load Theme on Start
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('viralScopeTheme');
             const btn = document.getElementById('themeBtn');
-            if (savedTheme === 'light') {
-                document.body.setAttribute('data-theme', 'light');
-                btn.innerText = '☀️';
-            } else {
-                document.body.removeAttribute('data-theme');
-                btn.innerText = '🌙';
+            if (savedTheme === 'light') { document.body.setAttribute('data-theme', 'light'); btn.innerText = '☀️'; } 
+            else { document.body.removeAttribute('data-theme'); btn.innerText = '🌙'; }
+            
+            // Cek API Key saat load
+            if (POLLINATIONS_API_KEY === "GANTI_DENGAN_KEY_ANDA_DISINI" || POLLINATIONS_API_KEY === "") {
+                document.getElementById('apiWarning').style.display = 'block';
             }
         });
 
         // --- 2. LOGIKA MENU ---
-        function toggleMenu() {
-            document.getElementById('dropdownMenu').classList.toggle('active');
-        }
+        function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('active'); }
 
-        // --- 3. LOGIKA BAHASA (Sederhana) ---
+        // --- 3. LOGIKA BAHASA ---
         function changeLanguage() {
             const lang = document.getElementById('langSelect').value;
             const placeholder = document.getElementById('promptInput');
             const btnText = document.getElementById('btnText');
-            
             if(lang === 'id') {
-                placeholder.placeholder = "Deskripsikan gambar (cth: Kucing cyberpunk makan bakso)...";
+                placeholder.placeholder = "Deskripsikan gambar (cth: Kucing cyberpunk)...";
                 btnText.innerText = "Buat Gambar";
             } else if (lang === 'es') {
-                placeholder.placeholder = "Describe tu imagen (ej: Gato cyberpunk comiendo)...";
+                placeholder.placeholder = "Describe tu imagen...";
                 btnText.innerText = "Generar";
             } else {
-                placeholder.placeholder = "Describe your image (e.g., Cyberpunk cat eating noodles)...";
+                placeholder.placeholder = "Describe your image (e.g., Cyberpunk cat)...";
                 btnText.innerText = "Generate Image";
             }
         }
 
-        // --- 4. LOGIKA GENERATE (FIXED URL & LOADING) ---
+        // --- 4. LOGIKA GENERATE (FIXED WITH API KEY) ---
         let currentImageUrl = '';
         let loadTimeout;
 
         async function generateImage() {
-            const promptInput = document.getElementById('promptInput');
-            // Trim() menghapus spasi di awal/akhir yang tidak sengaja
-            const prompt = promptInput.value.trim();
-            
-            if (!prompt) {
-                alert("Please enter a description first!");
+            if (POLLINATIONS_API_KEY === "GANTI_DENGAN_KEY_ANDA_DISINI" || POLLINATIONS_API_KEY === "") {
+                alert("⚠️ ERROR: API Key belum diatur!\n\nSilakan edit file ai-generator.html di GitHub, cari baris 'const POLLINATIONS_API_KEY', dan tempel key Anda dari enter.pollinations.ai.");
                 return;
             }
 
+            const promptInput = document.getElementById('promptInput');
+            const prompt = promptInput.value.trim();
+            if (!prompt) { alert("Please enter a description first!"); return; }
+
             // Reset UI
+            document.getElementById('apiWarning').style.display = 'none';
             document.getElementById('placeholderText').style.display = 'none';
             document.getElementById('imageContainer').style.display = 'none';
             document.getElementById('actionButtons').style.display = 'none';
@@ -394,48 +381,35 @@
             document.getElementById('generateBtn').disabled = true;
             document.getElementById('btnText').innerText = "Generating...";
 
-            // Seed Acak
             const randomSeed = Math.floor(Math.random() * 1000000);
-            
-            // Encode Prompt
             const encodedPrompt = encodeURIComponent(prompt);
             
-            // SUSUN URL TANPA SPASI (FIXED)
-            // Menggunakan template literal bersih
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${randomSeed}&width=1024&height=1024&nologo=true&model=flux`;
+            // SUSUN URL DENGAN API KEY
+            let imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&seed=${randomSeed}&nologo=true&model=flux&key=${POLLINATIONS_API_KEY}`;
+            imageUrl += `&t=${Date.now()}`; // Anti-cache
 
             currentImageUrl = imageUrl;
-            console.log("Generated URL:", imageUrl); // Untuk debug jika perlu
+            console.log("Requesting:", imageUrl);
 
             const imgElement = document.getElementById('generatedImage');
-            
-            // Reset timeout sebelumnya jika ada
             if(loadTimeout) clearTimeout(loadTimeout);
 
-            // Fungsi saat gambar berhasil load
             imgElement.onload = function() {
                 if(loadTimeout) clearTimeout(loadTimeout);
                 finishLoading(true);
             };
 
-            // Fungsi saat gambar error load
             imgElement.onerror = function() {
                 if(loadTimeout) clearTimeout(loadTimeout);
-                finishLoading(false, "Failed to load image. Try again.");
+                finishLoading(false, "Failed (Error 1033?). Check your API Key or try again.");
             };
             
-            // Set Source
             imgElement.src = imageUrl;
 
-            // Fallback Timer: Jika > 20 detik belum onload, anggap macet/tampilkan error
             loadTimeout = setTimeout(() => {
-                // Cek apakah gambar sudah muncul (kadang onload telat dipanggil)
-                if(imgElement.complete && imgElement.naturalHeight !== 0) {
-                    finishLoading(true);
-                } else {
-                    finishLoading(false, "Server is busy. Please try again.");
-                }
-            }, 20000); // 20 detik
+                if(imgElement.complete && imgElement.naturalHeight !== 0) finishLoading(true);
+                else finishLoading(false, "Server timeout. Try again.");
+            }, 20000);
         }
 
         function finishLoading(success, errorMsg) {
@@ -448,7 +422,7 @@
                 document.getElementById('actionButtons').style.display = 'flex';
             } else {
                 document.getElementById('placeholderText').style.display = 'flex';
-                document.getElementById('placeholderText').innerHTML = `<span style="color:#ff4444">❌ ${errorMsg || 'Error'}</span>`;
+                document.getElementById('placeholderText').innerHTML = `<span style="color:#ff4444">❌ ${errorMsg}</span>`;
             }
         }
 
@@ -463,39 +437,25 @@
 
         function downloadImage() {
             if (!currentImageUrl) return;
-            
-            // Fetch blob untuk trigger download
             fetch(currentImageUrl)
                 .then(response => response.blob())
                 .then(blob => {
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
+                    a.style.display = 'none'; a.href = url;
                     a.download = `viral-scope-ai-${Date.now()}.jpg`;
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
+                    document.body.appendChild(a); a.click();
+                    window.URL.revokeObjectURL(url); document.body.removeChild(a);
                 })
-                .catch(() => {
-                    // Fallback buka di tab baru
-                    window.open(currentImageUrl, '_blank');
-                });
+                .catch(() => window.open(currentImageUrl, '_blank'));
         }
 
         function shareImage() {
             if (!currentImageUrl) return;
-            
             if (navigator.share) {
-                navigator.share({
-                    title: 'ViralScope AI Art',
-                    text: 'Check out this AI image I created!',
-                    url: currentImageUrl
-                }).catch(console.error);
+                navigator.share({ title: 'ViralScope AI Art', text: 'Check this out!', url: currentImageUrl }).catch(console.error);
             } else {
-                navigator.clipboard.writeText(currentImageUrl);
-                showToast();
+                navigator.clipboard.writeText(currentImageUrl); showToast();
             }
         }
 
@@ -505,13 +465,9 @@
             setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
         }
 
-        // Enter key support
         document.getElementById('promptInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                generateImage();
-            }
+            if (e.key === 'Enter') generateImage();
         });
-
     </script>
 </body>
 </html>
