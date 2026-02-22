@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Generator - ViralScope</title>
+    <!-- Font Awesome untuk Ikon (Sama seperti index.html jika Anda menambahkannya nanti, saat ini kita pakai emoji/unicode dulu atau CDN jika perlu) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- 1. CSS VARIABLES (DISALIN PERSIS DARI INDEX.HTML) --- */
+        :root {
+            --bg: #0f0f0f; --card-bg: #1e1e1e; --text: #ffffff; --text-sec: #aaaaaa;
+            --nav-bg: rgba(15, 15, 15, 0.95); --input-bg: #2a2a2a; --border: #333;
+            --primary: #ff0050; --secondary: #00f2ea; --chip-bg: #2a2a2a; --chip-text: #aaa;
+            --modal-bg: rgba(0,0,0,0.95); --nav-height: 60px; --ad-bg: #252525;
+        }
+        [data-theme="light"] {
+            --bg: #f5f5f5; --card-bg: #ffffff; --text: #111111; --text-sec: #666666;
+            --nav-bg: rgba(255, 255, 255, 0.95); --input-bg: #e0e0e0; --border: #ddd;
+            --chip-bg: #e0e0e0; --chip-text: #555; --modal-bg: rgba(255,255,255,0.95); --ad-bg: #f0f0f0;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            transition: background 0.3s, color 0.3s; 
+        }
+
+        /* --- 2. NAVBAR (DISALIN PERSIS) --- */
+        nav {
+            width: 100%; padding: 0 20px; box-sizing: border-box;
+            background: var(--nav-bg); backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            height: var(--nav-height);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .logo { 
+            font-size: 1.4rem; font-weight: 800; 
+            background: linear-gradient(45deg, var(--primary), var(--secondary)); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            cursor: pointer; text-decoration: none; white-space: nowrap; 
+            z-index: 1002;
+        }
+
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        
+        .theme-btn { 
+            background: var(--chip-bg); border: 1px solid var(--border); 
+            color: var(--text); width: 40px; height: 40px; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; font-size: 1.2rem; transition: 0.2s; flex-shrink: 0;
+        }
+        .theme-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.1); }
+
+        .hamburger { 
+            display: flex; flex-direction: column; gap: 5px; 
+            cursor: pointer; width: 30px; height: 24px; justify-content: center; 
+            z-index: 1002; flex-shrink: 0;
+        }
+        .bar { width: 100%; height: 3px; background-color: var(--text); border-radius: 2px; transition: 0.3s; }
+        
+        .dropdown-menu {
+            display: none; position: fixed; top: var(--nav-height); right: 0;
+            width: 280px; max-width: 90%;
+            background: var(--nav-bg); border-left: 1px solid var(--border); border-bottom: 1px solid var(--border);
+            flex-direction: column; padding: 20px; gap: 5px;
+            box-shadow: -10px 10px 30px rgba(0,0,0,0.5);
+            z-index: 9999;
+            animation: slideLeft 0.3s ease-out;
+        }
+        .dropdown-menu.active { display: flex; }
+        @keyframes slideLeft { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .menu-item { 
+            text-decoration: none; color: var(--text); font-size: 1.1rem; font-weight: 600; 
+            padding: 15px 10px; border-bottom: 1px solid var(--border); 
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer;
+        }
+        .menu-item:hover { background: var(--chip-bg); color: var(--primary); }
+        .menu-item:last-child { border-bottom: none; }
+
+        /* --- 3. CONTAINER & LAYOUT UTAMA --- */
+        .container { 
+            width: 90%; max-width: 800px; /* Lebih sempit sedikit agar fokus ke generator */
+            margin: 20px auto; 
+            padding-bottom: 50px; 
+            text-align: center;
+        }
+
+        h1 { 
+            font-size: 2rem; 
+            margin-bottom: 10px; 
+            background: linear-gradient(45deg, var(--primary), var(--secondary)); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+        p.subtitle { color: var(--text-sec); margin-bottom: 30px; font-size: 1rem; }
+
+        /* --- 4. INPUT AREA (Mengikuti gaya Search Bar Index.html) --- */
+        .generator-box {
+            background: var(--card-bg);
+            padding: 30px 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex; 
+            align-items: center; 
+            background: var(--input-bg); 
+            border: 2px solid var(--border); 
+            border-radius: 30px; 
+            padding: 5px 15px; 
+            width: 100%; 
+            max-width: 600px; 
+            margin: 0 auto;
+            transition: 0.3s;
+        }
+        .input-group:focus-within { 
+            border-color: var(--primary); 
+            box-shadow: 0 0 15px rgba(255, 0, 80, 0.2); 
+        }
+        
+        .prompt-input { 
+            flex: 1; 
+            background: transparent; 
+            border: none; 
+            color: var(--text); 
+            font-size: 1rem; 
+            outline: none; 
+            padding: 10px; 
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(45deg, var(--primary), #d60043);
+            border: none; 
+            color: white;
+            width: 45px; 
+            height: 45px; 
+            border-radius: 50%;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            cursor: pointer; 
+            font-size: 1.2rem; 
+            transition: 0.2s; 
+            flex-shrink: 0;
+            margin-left: 10px;
+        }
+        .generate-btn:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(255, 0, 80, 0.4); }
+        .generate-btn:disabled { background: var(--chip-bg); color: var(--text-sec); cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* --- 5. HASIL GAMBAR --- */
+        .result-area {
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .image-container {
+            width: 100%;
+            max-width: 512px;
+            border-radius: 16px;
+            overflow: hidden;
+            display: none; /* Sembunyi default */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .image-container img { width: 100%; height: auto; display: block; }
+
+        .action-buttons {
+            margin-top: 20px;
+            display: none; /* Sembunyi default */
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            background: var(--chip-bg); 
+            border: 1px solid var(--border);
+            color: var(--text); 
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer; 
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .action-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-2px); }
+
+        /* Loading Spinner (Gaya sama dengan index.html) */
+        .loader {
+            display: inline-block; 
+            width: 40px; 
+            height: 40px; 
+            border: 4px solid var(--chip-bg); 
+            border-top-color: var(--primary); 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .placeholder-text { 
+            color: var(--text-sec); 
+            font-size: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .placeholder-icon { font-size: 4rem; opacity: 0.3; }
+
+        /* Toast Notification (Salin dari index.html) */
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: var(--card-bg); 
+            color: var(--text); text-align: center; border-radius: 30px; padding: 16px; 
+            position: fixed; z-index: 3000; left: 50%; bottom: 30px; 
+            transform: translateX(-50%); font-size: 0.9rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR (Sama persis) -->
+    <nav>
+        <div class="nav-left">
+            <a href="index.html" class="logo">⚡ ViralScope</a>
+        </div>
+        <div class="nav-right">
+            <button class="theme-btn" onclick="toggleTheme()" title="Toggle Theme" id="themeBtn">🌙</button>
+            <div class="hamburger" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- DROPDOWN MENU (Sama persis, link disesuaikan) -->
+    <div class="dropdown-menu" id="dropdownMenu">
+        <a class="menu-item" href="index.html" onclick="toggleMenu()">Home (Shorts) <span>🏠</span></a>
+        <a class="menu-item" href="ai-generator.html" onclick="toggleMenu()" style="color:var(--primary);">AI Generator <span>🤖</span></a>
+        <a class="menu-item" href="#" onclick="alert('Fitur Coming Soon!'); toggleMenu()">Favorites <span>❤️</span></a>
+        <a class="menu-item" href="https://google.com" target="_blank" onclick="toggleMenu()">External Links <span>🔗</span></a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <h1>AI Image Generator</h1>
+        <p class="subtitle">Create unique images from your imagination using Pollinations AI.</p>
+
+        <div class="generator-box">
+            <div class="input-group">
+                <input type="text" id="promptInput" class="prompt-input" placeholder="Describe your image (e.g., Cyberpunk cat eating noodles in Tokyo)..." autocomplete="off">
+                <button class="generate-btn" id="generateBtn" onclick="generateImage()">
+                    <i class="fas fa-magic"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="result-area" id="resultArea">
+            <div class="placeholder-text" id="placeholderText">
+                <div class="placeholder-icon">🎨</div>
+                <span>Enter a prompt above and click Generate</span>
+            </div>
+            
+            <div class="loader" id="loader"></div>
+            
+            <div class="image-container" id="imageContainer">
+                <img id="generatedImage" src="" alt="AI Generated Image">
+            </div>
+
+            <div class="action-buttons" id="actionButtons">
+                <button class="action-btn" onclick="downloadImage()"><i class="fas fa-download"></i> Download</button>
+                <button class="action-btn" onclick="shareImage()"><i class="fas fa-share-alt"></i> Share</button>
+                <button class="action-btn" onclick="resetGenerator()"><i class="fas fa-redo"></i> New</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">✅ Link copied to clipboard!</div>
+
+    <script>
+        // --- 1. LOGIKA TEMA (DISALIN PERSIS DARI INDEX.HTML) ---
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeBtn');
+            const isDark = body.getAttribute('data-theme') !== 'light';
+            
+            if (isDark) { 
+                body.setAttribute('data-theme', 'light'); 
+                btn.innerText = '☀️'; 
+            } else { 
+                body.removeAttribute('data-theme'); 
+                btn.innerText = '🌙'; 
+            }
+        }
+
+        // Cek tema saat load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Jika sebelumnya user set light mode di index.html, ini akan terbaca jika logic localStorage dipakai
+            // Namun karena index.html Anda pakai atribut langsung tanpa localStorage di snippet yg dikirim,
+            // kita cek manual apakah atribut ada.
+            // Untuk konsistensi penuh, mari kita tambahkan localStorage sederhana disini:
+            const savedTheme = localStorage.getItem('viralScopeTheme');
+            const btn = document.getElementById('themeBtn');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                btn.innerText = '☀️';
+            } else {
+                document.body.removeAttribute('data-theme');
+                btn.innerText = '🌙';
+            }
+        });
+
+        // Simpan preferensi tema
+        const originalToggle = toggleTheme;
+        toggleTheme = function() {
+            originalToggle();
+            const body = document.body;
+            const theme = body.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+            localStorage.setItem('viralScopeTheme', theme);
+        }
+
+        // --- 2. LOGIKA MENU ---
+        function toggleMenu() {
+            document.getElementById('dropdownMenu').classList.toggle('active');
+        }
+
+        // --- 3. LOGIKA AI GENERATOR (POLLINATIONS.AI) ---
+        let currentImageUrl = '';
+
+        async function generateImage() {
+            const promptInput = document.getElementById('promptInput');
+            const prompt = promptInput.value.trim();
+            
+            if (!prompt) {
+                alert("Please enter a description first!");
+                return;
+            }
+
+            // UI State: Loading
+            document.getElementById('placeholderText').style.display = 'none';
+            document.getElementById('imageContainer').style.display = 'none';
+            document.getElementById('actionButtons').style.display = 'none';
+            document.getElementById('loader').style.display = 'inline-block';
+            document.getElementById('generateBtn').disabled = true;
+
+            // Buat Seed Acak agar gambar selalu beda meski prompt sama
+            const randomSeed = Math.floor(Math.random() * 1000000);
+            
+            // Encode Prompt untuk URL
+            const encodedPrompt = encodeURIComponent(prompt);
+            
+            // URL Pollinations.ai
+            // Format: https://image.pollinations.ai/prompt/{prompt}?seed={seed}&width={w}&height={h}&nologo=true
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${randomSeed}&width=1024&height=1024&nologo=true&model=flux`;
+
+            currentImageUrl = imageUrl;
+
+            // Load Gambar
+            const imgElement = document.getElementById('generatedImage');
+            imgElement.onload = function() {
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('imageContainer').style.display = 'block';
+                document.getElementById('actionButtons').style.display = 'flex';
+                document.getElementById('generateBtn').disabled = false;
+            };
+            imgElement.onerror = function() {
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('placeholderText').style.display = 'flex';
+                document.getElementById('placeholderText').innerHTML = '<span style="color:#ff4444">❌ Failed to load image. Try again!</span>';
+                document.getElementById('generateBtn').disabled = false;
+            };
+            
+            imgElement.src = imageUrl;
+        }
+
+        function resetGenerator() {
+            document.getElementById('promptInput').value = '';
+            document.getElementById('imageContainer').style.display = 'none';
+            document.getElementById('actionButtons').style.display = 'none';
+            document.getElementById('placeholderText').style.display = 'flex';
+            document.getElementById('placeholderText').innerHTML = '<div class="placeholder-icon">🎨</div><span>Enter a prompt above and click Generate</span>';
+            currentImageUrl = '';
+        }
+
+        function downloadImage() {
+            if (!currentImageUrl) return;
+            
+            // Trik download dari URL eksternal (Fetch blob lalu download)
+            fetch(currentImageUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = `viral-scope-ai-${Date.now()}.jpg`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                })
+                .catch(() => {
+                    // Fallback jika fetch diblokir CORS (jarang terjadi di pollinations)
+                    window.open(currentImageUrl, '_blank');
+                });
+        }
+
+        function shareImage() {
+            if (!currentImageUrl) return;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'ViralScope AI Art',
+                    text: 'Check out this AI image I created!',
+                    url: currentImageUrl
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(currentImageUrl);
+                showToast();
+            }
+        }
+
+        function showToast() {
+            const x = document.getElementById("toast");
+            x.className = "show";
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('promptInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                generateImage();
+            }
+        });
+
+    </script>
+</body>
+</html>
