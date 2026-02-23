@@ -5,156 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Studio - ViralScope</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        /* --- CSS VARIABLES (SAMA PERSIS INDEX.HTML) --- */
-        :root {
-            --bg: #0f0f0f; --card-bg: #1e1e1e; --text: #ffffff; --text-sec: #aaaaaa;
-            --nav-bg: rgba(15, 15, 15, 0.95); --input-bg: #2a2a2a; --border: #333;
-            --primary: #ff0050; --secondary: #00f2ea; --chip-bg: #2a2a2a; --chip-text: #aaa;
-            --nav-height: 60px;
-        }
-        [data-theme="light"] {
-            --bg: #f5f5f5; --card-bg: #ffffff; --text: #111111; --text-sec: #666666;
-            --nav-bg: rgba(255, 255, 255, 0.95); --input-bg: #e0e0e0; --border: #ddd;
-            --chip-bg: #e0e0e0; --chip-text: #555;
-        }
-
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; min-height: 100vh; transition: background 0.3s, color 0.3s; }
-        
-        /* NAVBAR & MENU */
+        :root { --bg: #0f0f0f; --card-bg: #1e1e1e; --text: #ffffff; --text-sec: #aaaaaa; --nav-bg: rgba(15, 15, 15, 0.95); --input-bg: #2a2a2a; --border: #333; --primary: #ff0050; --secondary: #00f2ea; --chip-bg: #2a2a2a; --nav-height: 60px; }
+        [data-theme="light"] { --bg: #f5f5f5; --card-bg: #ffffff; --text: #111111; --text-sec: #666666; --nav-bg: rgba(255, 255, 255, 0.95); --input-bg: #e0e0e0; --border: #ddd; --chip-bg: #e0e0e0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; min-height: 100vh; transition: 0.3s; }
         nav { width: 100%; padding: 0 20px; box-sizing: border-box; background: var(--nav-bg); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border); height: var(--nav-height); display: flex; align-items: center; justify-content: space-between; }
         .nav-left { display: flex; align-items: center; gap: 15px; }
-        .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; white-space: nowrap; z-index: 1002; }
+        .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
         .nav-right { display: flex; align-items: center; gap: 15px; }
-        .theme-btn { background: var(--chip-bg); border: 1px solid var(--border); color: var(--text); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; transition: 0.2s; flex-shrink: 0; }
-        .theme-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.1); }
-        .hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; width: 30px; height: 24px; justify-content: center; z-index: 1002; flex-shrink: 0; }
-        .bar { width: 100%; height: 3px; background-color: var(--text); border-radius: 2px; transition: 0.3s; }
-        .dropdown-menu { display: none; position: fixed; top: var(--nav-height); right: 0; width: 280px; max-width: 90%; background: var(--nav-bg); border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); flex-direction: column; padding: 20px; gap: 5px; box-shadow: -10px 10px 30px rgba(0,0,0,0.5); z-index: 9999; animation: slideLeft 0.3s ease-out; }
+        .theme-btn { background: var(--chip-bg); border: 1px solid var(--border); color: var(--text); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; }
+        .hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; width: 30px; height: 24px; justify-content: center; }
+        .bar { width: 100%; height: 3px; background-color: var(--text); border-radius: 2px; }
+        .dropdown-menu { display: none; position: fixed; top: var(--nav-height); right: 0; width: 280px; background: var(--nav-bg); border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); flex-direction: column; padding: 20px; gap: 5px; z-index: 9999; animation: slideLeft 0.3s; }
         .dropdown-menu.active { display: flex; }
         @keyframes slideLeft { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        .menu-item { text-decoration: none; color: var(--text); font-size: 1.1rem; font-weight: 600; padding: 15px 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .menu-item { text-decoration: none; color: var(--text); font-size: 1.1rem; font-weight: 600; padding: 15px 10px; border-bottom: 1px solid var(--border); cursor: pointer; }
         .menu-item:hover { background: var(--chip-bg); color: var(--primary); }
-        .menu-item:last-child { border-bottom: none; }
-
-        /* CONTAINER */
         .container { width: 90%; max-width: 700px; margin: 20px auto; padding-bottom: 50px; }
-        
-        /* TABS SYSTEM */
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; overflow-x: auto; }
-        .tab-btn {
-            background: transparent; border: none; color: var(--text-sec);
-            font-size: 1rem; font-weight: 600; padding: 10px 20px;
-            cursor: pointer; white-space: nowrap; border-radius: 20px;
-            transition: 0.3s; display: flex; align-items: center; gap: 8px;
-        }
+        .tab-btn { background: transparent; border: none; color: var(--text-sec); font-size: 1rem; font-weight: 600; padding: 10px 20px; cursor: pointer; border-radius: 20px; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
         .tab-btn.active { background: var(--primary); color: white; }
-        .tab-btn:hover:not(.active) { background: var(--chip-bg); color: var(--text); }
-        .tab-btn.video-tab { opacity: 0.7; font-style: italic; }
-
-        /* CONTENT AREA */
-        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content { display: none; animation: fadeIn 0.4s; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         h1 { font-size: 1.8rem; margin: 10px 0; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        p.subtitle { color: var(--text-sec); font-size: 0.95rem; margin-bottom: 25px; line-height: 1.5; }
-
-        /* INPUT AREA (TEXTAREA) */
-        .input-group { position: relative; margin-bottom: 15px; }
-        .input-label { display: block; color: var(--text-sec); font-size: 0.9rem; margin-bottom: 8px; font-weight: 500; }
-        
-        .prompt-area {
-            width: 100%;
-            background: var(--input-bg);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            color: var(--text);
-            font-size: 1rem;
-            padding: 15px;
-            outline: none;
-            font-family: 'Inter', sans-serif;
-            box-sizing: border-box;
-            transition: 0.3s;
-            min-height: 120px;
-            resize: vertical;
-        }
-        .prompt-area:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(255, 0, 80, 0.2); }
-
+        p.subtitle { color: var(--text-sec); font-size: 0.95rem; margin-bottom: 25px; }
+        .prompt-area { width: 100%; background: var(--input-bg); border: 2px solid var(--border); border-radius: 12px; color: var(--text); font-size: 1rem; padding: 15px; outline: none; min-height: 120px; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        .prompt-area:focus { border-color: var(--primary); }
         .tools-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 10px; }
-        
-        .random-btn {
-            background: var(--chip-bg); border: 1px solid var(--border);
-            color: var(--text); padding: 8px 15px; border-radius: 20px;
-            cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 6px;
-            transition: 0.2s;
-        }
-        .random-btn:hover { background: var(--secondary); color: #000; border-color: var(--secondary); }
-
-        .ratio-selector { display: flex; gap: 5px; }
-        .ratio-btn {
-            background: var(--chip-bg); border: 1px solid var(--border);
-            color: var(--chip-text); padding: 6px 12px; border-radius: 8px;
-            font-size: 0.8rem; cursor: pointer; transition: 0.2s;
-        }
+        .random-btn, .ratio-btn { background: var(--chip-bg); border: 1px solid var(--border); color: var(--text); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; }
         .ratio-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-        .action-btn-main {
-            width: 100%; margin-top: 15px;
-            background: linear-gradient(45deg, var(--primary), #d60043);
-            border: none; color: white; padding: 15px;
-            border-radius: 12px; cursor: pointer;
-            font-size: 1.1rem; font-weight: bold;
-            transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .action-btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 0, 80, 0.4); }
-        .action-btn-main:disabled { background: var(--chip-bg); color: var(--text-sec); cursor: not-allowed; transform: none; }
-
-        /* CHAT SPECIFIC */
-        .chat-container {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 12px; height: 400px; overflow-y: auto;
-            padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 15px;
-        }
-        .message { max-width: 80%; padding: 10px 15px; border-radius: 12px; font-size: 0.95rem; line-height: 1.4; }
-        .message.user { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 2px; }
-        .message.ai { align-self: flex-start; background: var(--chip-bg); color: var(--text); border-bottom-left-radius: 2px; }
-        .chat-input-area { display: flex; gap: 10px; }
-        .chat-input { flex: 1; background: var(--input-bg); border: 1px solid var(--border); border-radius: 20px; padding: 12px 15px; color: var(--text); outline: none; }
-        .send-btn { background: var(--primary); color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-
-        /* RESULT & GALLERY */
+        .action-btn-main { width: 100%; margin-top: 15px; background: linear-gradient(45deg, var(--primary), #d60043); border: none; color: white; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: bold; }
+        .action-btn-main:disabled { background: var(--chip-bg); color: var(--text-sec); }
+        .chat-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; height: 400px; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .message { max-width: 80%; padding: 10px 15px; border-radius: 12px; font-size: 0.95rem; }
+        .message.user { align-self: flex-end; background: var(--primary); color: white; }
+        .message.ai { align-self: flex-start; background: var(--chip-bg); color: var(--text); }
+        .chat-input-area { display: flex; gap: 10px; margin-top: 15px; }
+        .chat-input { flex: 1; background: var(--input-bg); border: 1px solid var(--border); border-radius: 20px; padding: 12px; color: var(--text); outline: none; }
+        .send-btn { background: var(--primary); color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
         .result-area { margin-top: 30px; text-align: center; }
-        .image-container { width: 100%; border-radius: 12px; overflow: hidden; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid var(--border); margin: 0 auto; max-width: 512px; }
-        .image-container img { width: 100%; height: auto; display: block; }
-        
-        .gallery-section { margin-top: 40px; }
-        .gallery-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: var(--text-sec); }
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
-        .gallery-item { aspect-ratio: 1; border-radius: 8px; overflow: hidden; cursor: pointer; border: 1px solid var(--border); position: relative; }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
-        .gallery-item:hover img { transform: scale(1.1); }
-
-        .loader { display: inline-block; width: 30px; height: 30px; border: 3px solid var(--chip-bg); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        .image-container { width: 100%; border-radius: 12px; overflow: hidden; display: none; border: 1px solid var(--border); margin: 0 auto; max-width: 512px; }
+        .image-container img { width: 100%; height: auto; }
+        .loader { display: inline-block; width: 30px; height: 30px; border: 3px solid var(--chip-bg); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .placeholder-box { padding: 40px 20px; color: var(--text-sec); background: var(--card-bg); border-radius: 12px; border: 1px dashed var(--border); }
-        
-        .action-buttons { margin-top: 15px; display: none; gap: 10px; justify-content: center; flex-wrap: wrap; }
-        .btn-small { background: var(--chip-bg); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
-        .btn-small:hover { background: var(--primary); color: white; border-color: var(--primary); }
-
-        #toast { visibility: hidden; min-width: 250px; background-color: var(--card-bg); color: var(--text); text-align: center; border-radius: 30px; padding: 16px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 0.9rem; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 1px solid var(--border); }
+        .placeholder-box { padding: 40px; color: var(--text-sec); background: var(--card-bg); border-radius: 12px; border: 1px dashed var(--border); }
+        .action-buttons { margin-top: 15px; display: none; gap: 10px; justify-content: center; }
+        .btn-small { background: var(--chip-bg); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; }
+        .gallery-section { margin-top: 40px; display: none; }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-top: 10px; }
+        .gallery-item { aspect-ratio: 1; border-radius: 8px; overflow: hidden; cursor: pointer; border: 1px solid var(--border); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+        #toast { visibility: hidden; min-width: 250px; background: var(--card-bg); color: var(--text); text-align: center; border-radius: 30px; padding: 16px; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 3000; border: 1px solid var(--border); }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
-        
-        .lang-select { background: var(--chip-bg); color: var(--text); border: 1px solid var(--border); padding: 8px 12px; border-radius: 15px; outline: none; font-size: 0.9rem; }
+        .lang-select { background: var(--chip-bg); color: var(--text); border: 1px solid var(--border); padding: 8px; border-radius: 15px; }
     </style>
 </head>
 <body>
-
     <nav>
         <div class="nav-left"><a href="index.html" class="logo">⚡ ViralScope</a></div>
         <div class="nav-right">
@@ -162,383 +71,218 @@
             <div class="hamburger" onclick="toggleMenu()"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
         </div>
     </nav>
-
     <div class="dropdown-menu" id="dropdownMenu">
-        <a class="menu-item" href="index.html" onclick="toggleMenu()" data-i18n="menu_home">Home <span>🏠</span></a>
-        <a class="menu-item" href="ai-generator.html" onclick="toggleMenu()" style="color:var(--primary);" data-i18n="menu_ai">AI Studio <span>🤖</span></a>
-        <a class="menu-item" href="https://runwayml.com" target="_blank" onclick="toggleMenu()" data-i18n="menu_video">AI Video (External) <span>🎥</span></a>
-        <a class="menu-item" href="#" onclick="alert('Favorites coming soon!'); toggleMenu()" data-i18n="menu_fav">Favorites <span>❤️</span></a>
-        <div style="padding: 15px 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-            <span style="color:var(--text); font-weight:600;" data-i18n="lbl_lang">Language</span>
+        <a class="menu-item" href="index.html" onclick="toggleMenu()">Home 🏠</a>
+        <a class="menu-item" href="ai-generator.html" onclick="toggleMenu()" style="color:var(--primary)">AI Studio 🤖</a>
+        <a class="menu-item" href="https://runwayml.com" target="_blank" onclick="toggleMenu()">Video AI 🎥</a>
+        <div style="padding:15px 10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;">
+            <span style="color:var(--text); font-weight:600;">Language</span>
             <select id="langSelect" class="lang-select" onchange="changeLanguage()">
-                <option value="en">🇺🇸 EN</option>
-                <option value="id">🇮🇩 ID</option>
-                <option value="es">🇪🇸 ES</option>
-                <option value="jp">🇯🇵 JP</option>
+                <option value="en">🇺🇸 EN</option><option value="id">🇮🇩 ID</option><option value="es">🇪🇸 ES</option><option value="jp">🇯🇵 JP</option>
             </select>
         </div>
     </div>
 
     <div class="container">
-        <!-- TABS -->
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('image')"><i class="fas fa-image"></i> <span data-i18n="tab_image">Image</span></button>
-            <button class="tab-btn" onclick="switchTab('chat')"><i class="fas fa-comment-dots"></i> <span data-i18n="tab_chat">Chat</span></button>
-            <button class="tab-btn video-tab" onclick="window.open('https://runwayml.com', '_blank')"><i class="fas fa-video"></i> <span data-i18n="tab_video">Video</span></button>
+            <button class="tab-btn active" onclick="switchTab('image')">🎨 Image</button>
+            <button class="tab-btn" onclick="switchTab('chat')">💬 Chat</button>
         </div>
 
-        <!-- IMAGE GENERATOR TAB -->
+        <!-- IMAGE TAB -->
         <div id="tab-image" class="tab-content active">
-            <h1 data-i18n="title_img">AI Image Generator</h1>
-            <p class="subtitle" data-i18n="desc_img">Create stunning visuals using Stable Diffusion XL.</p>
-
-            <div class="input-group">
-                <label class="input-label" data-i18n="lbl_prompt_img">Describe your image:</label>
-                <textarea id="imgPrompt" class="prompt-area" placeholder="A cyberpunk cat eating noodles in Tokyo..."></textarea>
-                
-                <div class="tools-row">
-                    <button class="random-btn" onclick="fillRandomPrompt()"><i class="fas fa-dice"></i> <span data-i18n="btn_random">Random Idea</span></button>
-                    <div class="ratio-selector">
-                        <button class="ratio-btn active" onclick="setRatio('1:1', this)">1:1</button>
-                        <button class="ratio-btn" onclick="setRatio('9:16', this)">9:16</button>
-                        <button class="ratio-btn" onclick="setRatio('16:9', this)">16:9</button>
-                    </div>
+            <h1>AI Image Generator</h1>
+            <p class="subtitle">Powered by Stable Diffusion XL</p>
+            <textarea id="imgPrompt" class="prompt-area" placeholder="A cyberpunk cat..."></textarea>
+            <div class="tools-row">
+                <button class="random-btn" onclick="fillRandomPrompt()">🎲 Random</button>
+                <div style="display:flex; gap:5px;">
+                    <button class="ratio-btn active" onclick="setRatio(1024,1024,this)">1:1</button>
+                    <button class="ratio-btn" onclick="setRatio(768,1344,this)">9:16</button>
+                    <button class="ratio-btn" onclick="setRatio(1344,768,this)">16:9</button>
                 </div>
             </div>
-
-            <button class="action-btn-main" id="genImgBtn" onclick="generateImage()">
-                <i class="fas fa-magic"></i> <span data-i18n="btn_generate">Generate</span>
-            </button>
-
+            <button class="action-btn-main" id="genImgBtn" onclick="generateImage()">✨ Generate</button>
+            
             <div class="result-area">
-                <div id="imgPlaceholder" class="placeholder-box">
-                    <i class="fas fa-image" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
-                    <p data-i18n="msg_wait">Your artwork will appear here</p>
-                </div>
-                <div class="loader" id="imgLoader" style="display:none;"></div>
-                
-                <div class="image-container" id="imgContainer">
-                    <img id="generatedImage" src="" alt="AI Art">
-                </div>
-
+                <div id="imgPlaceholder" class="placeholder-box">Art will appear here</div>
+                <div class="loader" id="imgLoader"></div>
+                <div class="image-container" id="imgContainer"><img id="generatedImage" src=""></div>
                 <div class="action-buttons" id="imgActions">
-                    <button class="btn-small" onclick="downloadImage()"><i class="fas fa-download"></i> <span data-i18n="btn_download">Download</span></button>
-                    <button class="btn-small" onclick="shareImage()"><i class="fas fa-share-alt"></i> <span data-i18n="btn_share">Share</span></button>
+                    <button class="btn-small" onclick="downloadImage()">Download</button>
+                    <button class="btn-small" onclick="shareImage()">Share</button>
                 </div>
             </div>
-
-            <!-- MINI GALLERY -->
-            <div class="gallery-section" id="gallerySection" style="display:none;">
-                <div class="gallery-title" data-i18n="lbl_history">Recent Creations</div>
+            <div class="gallery-section" id="gallerySection">
+                <div style="color:var(--text-sec); font-weight:600; margin-bottom:10px;">Recent</div>
                 <div class="gallery-grid" id="galleryGrid"></div>
             </div>
         </div>
 
         <!-- CHAT TAB -->
         <div id="tab-chat" class="tab-content">
-            <h1 data-i18n="title_chat">AI Chat Assistant</h1>
-            <p class="subtitle" data-i18n="desc_chat">Talk with Llama 3 model.</p>
-
-            <div class="chat-container" id="chatBox">
-                <div class="message ai" data-i18n="msg_welcome">Hello! How can I help you today?</div>
-            </div>
-
+            <h1>AI Chat</h1>
+            <p class="subtitle">Powered by Llama 3</p>
+            <div class="chat-container" id="chatBox"><div class="message ai">Hello! How can I help?</div></div>
             <div class="chat-input-area">
-                <input type="text" id="chatInput" class="chat-input" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendChat()">
-                <button class="send-btn" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+                <input type="text" id="chatInput" class="chat-input" placeholder="Type..." onkeypress="if(event.key==='Enter') sendChat()">
+                <button class="send-btn" onclick="sendChat()">➤</button>
             </div>
         </div>
     </div>
-
     <div id="toast">✅ Copied!</div>
 
     <script>
-        // --- KONFIGURASI ---
-        const HF_TOKEN = "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"; 
-        const IMG_MODEL = "stabilityai/stable-diffusion-xl-base-1.0";
-        const CHAT_MODEL = "meta-llama/Meta-Llama-3-8B-Instruct";
+        const HF_TOKEN = "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";
+        // GUNAKAN PROXY ALTERNATIF (AllOrigins) yang seringkali lebih stabil di HP
+        const PROXY_BASE = "https://api.allorigins.win/raw?url=";
         
-        // PROXY URL untuk menghindari CORS & Blokir ISP
-        const PROXY_URL = "https://corsproxy.io/?";
-
-        let currentRatio = { w: 1024, h: 1024 };
         let currentImgUrl = '';
-        let chatHistory = [];
-
-        // --- TRANSLATIONS ---
-        const translations = {
-            en: {
-                menu_home: "Home 🏠", menu_ai: "AI Studio 🤖", menu_video: "AI Video (Ext) 🎥", menu_fav: "Favorites ❤️", lbl_lang: "Language",
-                tab_image: "Image", tab_chat: "Chat", tab_video: "Video",
-                title_img: "AI Image Generator", desc_img: "Create stunning visuals using Stable Diffusion XL.",
-                lbl_prompt_img: "Describe your image:", btn_random: "Random Idea 🎲", btn_generate: "Generate Image ✨",
-                msg_wait: "Your artwork will appear here", btn_download: "Download", btn_share: "Share", lbl_history: "Recent Creations",
-                title_chat: "AI Chat Assistant", desc_chat: "Talk with Llama 3 model.", msg_welcome: "Hello! How can I help you today?",
-                ph_chat: "Type a message...", toast_copy: "✅ Link copied!", err_net: "Network error. Try again.", err_gen: "Generation failed."
-            },
-            id: {
-                menu_home: "Beranda 🏠", menu_ai: "Studio AI 🤖", menu_video: "Video AI (Luar) 🎥", menu_fav: "Favorit ❤️", lbl_lang: "Bahasa",
-                tab_image: "Gambar", tab_chat: "Obrolan", tab_video: "Video",
-                title_img: "Pembuat Gambar AI", desc_img: "Buat visual menakjubkan dengan Stable Diffusion XL.",
-                lbl_prompt_img: "Deskripsikan gambar Anda:", btn_random: "Ide Acak 🎲", btn_generate: "Buat Gambar ✨",
-                msg_wait: "Karya seni Anda akan muncul di sini", btn_download: "Unduh", btn_share: "Bagikan", lbl_history: "Riwayat Terbaru",
-                title_chat: "Asisten Obrolan AI", desc_chat: "Mengobrol dengan model Llama 3.", msg_welcome: "Halo! Ada yang bisa dibantu?",
-                ph_chat: "Ketik pesan...", toast_copy: "✅ Link disalin!", err_net: "Error jaringan. Coba lagi.", err_gen: "Gagal membuat."
-            },
-            es: {
-                menu_home: "Inicio 🏠", menu_ai: "Estudio IA 🤖", menu_video: "Video IA (Ext) 🎥", menu_fav: "Favoritos ❤️", lbl_lang: "Idioma",
-                tab_image: "Imagen", tab_chat: "Chat", tab_video: "Video",
-                title_img: "Generador de Imágenes", desc_img: "Crea visuales increíbles con SDXL.",
-                lbl_prompt_img: "Describe tu imagen:", btn_random: "Idea Aleatoria 🎲", btn_generate: "Generar ✨",
-                msg_wait: "Tu arte aparecerá aquí", btn_download: "Descargar", btn_share: "Compartir", lbl_history: "Recientes",
-                title_chat: "Asistente Chat IA", desc_chat: "Habla con Llama 3.", msg_welcome: "¡Hola! ¿En qué ayudo?",
-                ph_chat: "Escribe un mensaje...", toast_copy: "¡✅ Enlace copiado!", err_net: "Error de red.", err_gen: "Falló la generación."
-            },
-            jp: {
-                menu_home: "ホーム 🏠", menu_ai: "AI スタジオ 🤖", menu_video: "AI 動画 (外部) 🎥", menu_fav: "お気に入り ❤️", lbl_lang: "言語",
-                tab_image: "画像", tab_chat: "チャット", tab_video: "動画",
-                title_img: "AI 画像生成", desc_img: "SDXL で素晴らしいビジュアルを作成。",
-                lbl_prompt_img: "画像の説明:", btn_random: "ランダムアイデア 🎲", btn_generate: "生成 ✨",
-                msg_wait: "ここにアートが表示されます", btn_download: "ダウンロード", btn_share: "シェア", lbl_history: "最近の作成",
-                title_chat: "AI チャットアシスタント", desc_chat: "Llama 3 と会話しよう。", msg_welcome: "こんにちは！どう手伝おう？",
-                ph_chat: "メッセージを入力...", toast_copy: "✅ リンクをコピー！", err_net: "ネットワークエラー。", err_gen: "生成に失敗。"
-            }
-        };
-
         let currentLang = 'en';
 
-        // --- INIT ---
         window.addEventListener('DOMContentLoaded', () => {
-            loadTheme();
-            loadGallery();
-            changeLanguage();
+            loadTheme(); loadGallery(); changeLanguage();
         });
 
         function loadTheme() {
-            const savedTheme = localStorage.getItem('viralScopeTheme');
+            const t = localStorage.getItem('viralScopeTheme');
             const btn = document.getElementById('themeBtn');
-            if (savedTheme === 'light') { document.body.setAttribute('data-theme', 'light'); btn.innerText = '☀️'; } 
-            else { document.body.removeAttribute('data-theme'); btn.innerText = '🌙'; }
+            if(t==='light'){document.body.setAttribute('data-theme','light'); btn.innerText='☀️';}
+            else{document.body.removeAttribute('data-theme'); btn.innerText='🌙';}
         }
-
         function toggleTheme() {
-            const body = document.body;
+            const isDark = document.body.getAttribute('data-theme') !== 'light';
             const btn = document.getElementById('themeBtn');
-            const isDark = body.getAttribute('data-theme') !== 'light';
-            if (isDark) { body.setAttribute('data-theme', 'light'); btn.innerText = '☀️'; localStorage.setItem('viralScopeTheme', 'light'); } 
-            else { body.removeAttribute('data-theme'); btn.innerText = '🌙'; localStorage.setItem('viralScopeTheme', 'dark'); }
+            if(isDark){document.body.setAttribute('data-theme','light'); btn.innerText='☀️'; localStorage.setItem('viralScopeTheme','light');}
+            else{document.body.removeAttribute('data-theme'); btn.innerText='🌙'; localStorage.setItem('viralScopeTheme','dark');}
         }
-
         function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('active'); }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(`tab-${tab}`).classList.add('active');
-            const buttons = document.querySelectorAll('.tab-btn');
-            if(tab === 'image') buttons[0].classList.add('active');
-            if(tab === 'chat') buttons[1].classList.add('active');
+        function switchTab(t) {
+            document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(e=>e.classList.remove('active'));
+            document.getElementById(`tab-${t}`).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
-
         function changeLanguage() {
-            const lang = document.getElementById('langSelect').value;
-            currentLang = lang;
-            const t = translations[lang];
-
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (t[key]) el.innerHTML = t[key];
-            });
-
-            document.getElementById('imgPrompt').placeholder = lang === 'id' ? "Kucing cyberpunk makan bakso..." : (lang === 'es' ? "Gato cyberpunk comiendo..." : "A cyberpunk cat eating noodles...");
-            document.getElementById('chatInput').placeholder = t.ph_chat;
+            const l = document.getElementById('langSelect').value;
+            currentLang = l;
+            const ph = document.getElementById('imgPrompt');
+            if(l==='id') ph.placeholder = "Kucing cyberpunk...";
+            else if(l==='es') ph.placeholder = "Gato cyberpunk...";
+            else ph.placeholder = "A cyberpunk cat...";
         }
-
-        // --- IMAGE LOGIC ---
-        function setRatio(ratio, btn) {
-            document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            if (ratio === '1:1') currentRatio = { w: 1024, h: 1024 };
-            if (ratio === '9:16') currentRatio = { w: 768, h: 1344 };
-            if (ratio === '16:9') currentRatio = { w: 1344, h: 768 };
+        function setRatio(w,h,b) {
+            document.querySelectorAll('.ratio-btn').forEach(e=>e.classList.remove('active'));
+            b.classList.add('active');
+            window.currentW = w; window.currentH = h;
         }
+        window.currentW = 1024; window.currentH = 1024;
 
-        const randomPrompts = [
-            "Cyberpunk cat eating noodles in Tokyo neon city",
-            "Astronaut riding a horse on Mars sunset",
-            "Cute fluffy rabbit wearing sunglasses at beach",
-            "Futuristic car flying over green mountains",
-            "Steampunk robot drinking coffee in library",
-            "Dragon made of flowers flying in sky"
-        ];
-
-        function fillRandomPrompt() {
-            const rand = randomPrompts[Math.floor(Math.random() * randomPrompts.length)];
-            document.getElementById('imgPrompt').value = rand;
-        }
+        const randoms = ["Cyberpunk cat", "Astronaut on horse", "Flower dragon", "Steampunk robot"];
+        function fillRandomPrompt() { document.getElementById('imgPrompt').value = randoms[Math.floor(Math.random()*randoms.length)]; }
 
         async function generateImage() {
-            const prompt = document.getElementById('imgPrompt').value.trim();
-            if (!prompt) { alert("Please enter a description!"); return; }
-
+            const p = document.getElementById('imgPrompt').value.trim();
+            if(!p) return alert("Enter prompt!");
+            
             const btn = document.getElementById('genImgBtn');
-            const placeholder = document.getElementById('imgPlaceholder');
             const loader = document.getElementById('imgLoader');
+            const placeholder = document.getElementById('imgPlaceholder');
             const container = document.getElementById('imgContainer');
             const actions = document.getElementById('imgActions');
-            const t = translations[currentLang];
+            
+            btn.disabled = true; placeholder.style.display='none'; container.style.display='none'; actions.style.display='none'; loader.style.display='inline-block';
 
-            btn.disabled = true;
-            placeholder.style.display = 'none';
-            container.style.display = 'none';
-            actions.style.display = 'none';
-            loader.style.display = 'inline-block';
-
-            // SUSUN URL TANPA SPASI & PAKAI PROXY
-            const hfUrl = `https://api-inference.huggingface.co/models/${IMG_MODEL}`;
-            const finalUrl = `${PROXY_URL}${encodeURIComponent(hfUrl)}`;
+            // SUSUN URL TARGET
+            const target = `https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0`;
+            // ENCODE URL TARGET AGAR BISA DILEMPAR KE PROXY
+            const proxyUrl = `${PROXY_BASE}${encodeURIComponent(target)}`;
 
             try {
-                const response = await fetch(finalUrl, {
-                    method: "POST",
-                    headers: { 
-                        "Authorization": `Bearer ${HF_TOKEN}`,
-                        "Content-Type": "application/json",
-                        "X-Wait-For-Model": "true"
+                // KIRIM REQUEST KE PROXY
+                const res = await fetch(proxyUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${HF_TOKEN}`,
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ 
-                        inputs: prompt, 
-                        parameters: { width: currentRatio.w, height: currentRatio.h } 
-                    })
+                    body: JSON.stringify({ inputs: p, parameters: { width: window.currentW, height: window.currentH } })
                 });
 
-                if (response.status === 503) throw new Error("Model loading. Wait 30s.");
-                if (response.status === 401) throw new Error("Invalid Token.");
-                if (!response.ok) throw new Error(`Error: ${response.status}`);
-
-                const blob = await response.blob();
-                if (blob.size === 0) throw new Error("Empty image.");
+                if(!res.ok) throw new Error(`Error ${res.status}`);
+                
+                const blob = await res.blob();
+                if(blob.size === 0) throw new Error("Empty image");
 
                 currentImgUrl = URL.createObjectURL(blob);
                 const img = document.getElementById('generatedImage');
                 img.src = currentImgUrl;
-                
                 img.onload = () => {
-                    loader.style.display = 'none';
-                    container.style.display = 'block';
-                    actions.style.display = 'flex';
-                    btn.disabled = false;
+                    loader.style.display='none'; container.style.display='block'; actions.style.display='flex'; btn.disabled=false;
                     saveToGallery(currentImgUrl);
                 };
-
-            } catch (e) {
-                console.error(e);
-                loader.style.display = 'none';
-                placeholder.style.display = 'block';
-                placeholder.innerHTML = `<span style="color:#ff4444">❌ ${e.message}</span>`;
-                btn.disabled = false;
+            } catch(e) {
+                loader.style.display='none'; placeholder.style.display='block';
+                placeholder.innerHTML = `<span style="color:#ff4444">❌ ${e.message}. Try WiFi or different network.</span>`;
+                btn.disabled=false;
             }
         }
 
         async function sendChat() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if (!text) return;
+            const inp = document.getElementById('chatInput');
+            const txt = inp.value.trim();
+            if(!txt) return;
+            const box = document.getElementById('chatBox');
+            box.innerHTML += `<div class="message user">${txt}</div>`;
+            inp.value='';
+            const id = 'l'+Date.now();
+            box.innerHTML += `<div class="message ai" id="${id}">...</div>`;
+            box.scrollTop = box.scrollHeight;
 
-            const chatBox = document.getElementById('chatBox');
-            chatBox.innerHTML += `<div class="message user">${text}</div>`;
-            input.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            const loadingId = 'loading-' + Date.now();
-            chatBox.innerHTML += `<div class="message ai" id="${loadingId}"><i class="fas fa-spinner fa-spin"></i></div>`;
-            
-            // SUSUN URL TANPA SPASI & PAKAI PROXY
-            const hfUrl = `https://api-inference.huggingface.co/models/${CHAT_MODEL}`;
-            const finalUrl = `${PROXY_URL}${encodeURIComponent(hfUrl)}`;
+            const target = `https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct`;
+            const proxyUrl = `${PROXY_BASE}${encodeURIComponent(target)}`;
 
             try {
-                const response = await fetch(finalUrl, {
-                    method: "POST",
-                    headers: { 
-                        "Authorization": `Bearer ${HF_TOKEN}`,
-                        "Content-Type": "application/json",
-                        "X-Wait-For-Model": "true"
-                    },
-                    body: JSON.stringify({ inputs: text })
+                const res = await fetch(proxyUrl, {
+                    method:'POST',
+                    headers: {'Authorization':`Bearer ${HF_TOKEN}`, 'Content-Type':'application/json'},
+                    body: JSON.stringify({inputs: txt})
                 });
-
-                if (!response.ok) throw new Error("Chat unavailable.");
-
-                const data = await response.json();
-                let reply = "Sorry.";
-                if (data && data[0] && data[0].generated_text) {
-                    reply = data[0].generated_text.replace(text, '').trim().split('\n')[0];
-                }
-                document.getElementById(loadingId).innerText = reply;
-
-            } catch (e) {
-                document.getElementById(loadingId).innerText = "⚠️ Error: " + e.message;
-            }
-            chatBox.scrollTop = chatBox.scrollHeight;
+                const d = await res.json();
+                let reply = "Error.";
+                if(d[0] && d[0].generated_text) reply = d[0].generated_text.replace(txt,'').trim();
+                document.getElementById(id).innerText = reply;
+            } catch(e) { document.getElementById(id).innerText = "Network Error"; }
         }
 
         function saveToGallery(url) {
-            let gallery = JSON.parse(localStorage.getItem('vs_gallery') || '[]');
-            gallery.unshift(url);
-            if (gallery.length > 8) gallery.pop();
-            localStorage.setItem('vs_gallery', JSON.stringify(gallery));
-            loadGallery();
+            let g = JSON.parse(localStorage.getItem('vs_g')||'[]');
+            g.unshift(url); if(g.length>6)g.pop();
+            localStorage.setItem('vs_g', JSON.stringify(g)); loadGallery();
         }
-
         function loadGallery() {
-            let gallery = JSON.parse(localStorage.getItem('vs_gallery') || '[]');
+            let g = JSON.parse(localStorage.getItem('vs_g')||'[]');
             const grid = document.getElementById('galleryGrid');
-            const section = document.getElementById('gallerySection');
-            grid.innerHTML = '';
-            if (gallery.length > 0) {
-                section.style.display = 'block';
-                gallery.forEach(src => {
-                    const div = document.createElement('div');
-                    div.className = 'gallery-item';
-                    div.innerHTML = `<img src="${src}" onclick="viewImage('${src}')">`;
-                    grid.appendChild(div);
+            const sec = document.getElementById('gallerySection');
+            grid.innerHTML='';
+            if(g.length>0){
+                sec.style.display='block';
+                g.forEach(u=>{
+                    const d=document.createElement('div'); d.className='gallery-item';
+                    d.innerHTML=`<img src="${u}" onclick="view('${u}')">`; grid.appendChild(d);
                 });
-            } else {
-                section.style.display = 'none';
-            }
+            } else sec.style.display='none';
         }
-
-        function viewImage(src) {
-            currentImgUrl = src;
-            document.getElementById('generatedImage').src = src;
-            document.getElementById('imgPlaceholder').style.display = 'none';
-            document.getElementById('imgLoader').style.display = 'none';
-            document.getElementById('imgContainer').style.display = 'block';
-            document.getElementById('imgActions').style.display = 'flex';
-            window.scrollTo({ top: document.getElementById('imgContainer').offsetTop - 100, behavior: 'smooth' });
+        function view(u) {
+            currentImgUrl=u;
+            document.getElementById('generatedImage').src=u;
+            document.getElementById('imgPlaceholder').style.display='none';
+            document.getElementById('imgLoader').style.display='none';
+            document.getElementById('imgContainer').style.display='block';
+            document.getElementById('imgActions').style.display='flex';
         }
-
-        function downloadImage() {
-            if (!currentImgUrl) return;
-            const a = document.createElement('a');
-            a.href = currentImgUrl;
-            a.download = `viral-scope-${Date.now()}.png`;
-            document.body.appendChild(a); a.click(); document.body.removeChild(a);
-        }
-
-        function shareImage() {
-            if (!currentImgUrl) return;
-            if (navigator.share) navigator.share({ title: 'ViralScope AI', url: currentImgUrl }).catch(()=>{});
-            else { navigator.clipboard.writeText(currentImgUrl); showToast(); }
-        }
-
-        function showToast() {
-            const x = document.getElementById("toast");
-            x.className = "show";
-            setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
-        }
+        function downloadImage() { if(!currentImgUrl)return; const a=document.createElement('a'); a.href=currentImgUrl; a.download='viral.png'; a.click(); }
+        function shareImage() { if(!currentImgUrl)return; navigator.clipboard.writeText(currentImgUrl); document.getElementById('toast').className='show'; setTimeout(()=>document.getElementById('toast').className='',3000); }
     </script>
 </body>
 </html>
